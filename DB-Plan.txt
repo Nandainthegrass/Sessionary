@@ -1,0 +1,31 @@
+
+Step 1: Registering Users:
+
+{Userid: Name, "Profile_Picture", Status:Online/Offline/Occupied}
+
+
+
+Step 2: Establishing Session:
+
+	Sessionid: {
+		A1:"data",
+		B1:"data",
+		B2:"data",
+		}
+	
+
+Step 3: Message sent:
+	{
+		messageid: "data", "Sender", "Sessionid", "TimeStamp"
+	}
+
+step 4: Message Stored:
+
+	messageid: "data", "timestamp"
+
+	Sessionid:
+	"User1ID": [messageid1, messageid2,...]
+	"User2ID": [messageid1, messageid2, ...]
+
+Step 5: Message Recieved
+	messageid : "data", "timestamp"
