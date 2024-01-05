@@ -6,4 +6,4 @@ app = FastAPI()
 def home(Number):
     return {"Hello": Number}
 
-#Winston You Suck
+#Nanda You Suck
