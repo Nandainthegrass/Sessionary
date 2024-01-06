@@ -2,3 +2,4 @@ fastapi
 uvicorn
 motor
 fastapi_socketio
+uuid

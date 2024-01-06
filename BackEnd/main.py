@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 import requests
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -25,10 +25,10 @@ class Message(BaseModel):
     TimeStamp: str
 
 
-@app.post('/register_user/{user_id}/')
-def register_user(user_id: int, user: User):
+@app.post('/register_user/')
+def register_user(user: User):
     print(user.username)
-    return None
+    return Response(content={"UserID": 1234, "UserName":user.username}, status_code=200)
 
 @app.get('/load_details/{session_id}')
 def Load_Session_Details(session_id: int):
