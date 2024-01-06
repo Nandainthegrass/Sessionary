@@ -1,7 +1,7 @@
 
 Step 1: Registering Users:
 
-{Userid: Name, "Profile_Picture", Status:Online/Offline/Occupied}
+{Userid: Name, Password, Status:Online/Offline/Occupied}
 
 
 
