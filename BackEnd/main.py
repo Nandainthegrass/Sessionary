@@ -5,8 +5,18 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]
+)
 class User(BaseModel):
-    name: str
+    username: str
     password: str
 
 class Message(BaseModel):
@@ -17,6 +27,7 @@ class Message(BaseModel):
 
 @app.post('/register_user/{user_id}/')
 def register_user(user_id: int, user: User):
+    print(user.username)
     return None
 
 @app.get('/load_details/{session_id}')
