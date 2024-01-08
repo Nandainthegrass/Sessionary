@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import "./App.css";
+import { Route } from "react-router-dom";
 
 function App() {
   function submitForm(event) {
@@ -17,12 +18,19 @@ function App() {
       body: details,
     })
       .then((response) => {
-        if (response.status == 200){
-          console.log(response.json())
+        if (response.status == 200) {
+          return response.json();
         } else if (response.status == 269) {
           console.log("Username Taken");
         } else {
           console.error("Form submission failed");
+        }
+      })
+      .then((data) => {
+        if (data) {
+          let UserID = data.UserID;
+          let Username = data.Username;
+          console.log(`UserId: ${UserID} and UserName: ${Username}`);
         }
       })
       .catch((error) => {
