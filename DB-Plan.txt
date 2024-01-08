@@ -8,12 +8,12 @@ Login also same details, if Username Taken then they will be given a pop up and 
 
 Step 2: Establishing Session:
 
-	Sessionid: {
-		A1:"data",
-		B1:"data",
-		B2:"data",
+	{Sessionid: {
+		Nanda1: "data",
+		Winston1: "data",
+		Winston2: "data",
 		}
-	
+	}
 
 Step 3: Message sent:
 	{

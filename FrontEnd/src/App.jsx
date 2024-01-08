@@ -9,7 +9,7 @@ function App() {
     let details = JSON.stringify(Object.fromEntries(formData));
     console.log(details);
 
-    fetch("http://127.0.0.1:8000/register_user/1232/", {
+    fetch("http://localhost:8000/register_user/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,8 +17,10 @@ function App() {
       body: details,
     })
       .then((response) => {
-        if (response.ok) {
-          console.log("Form submitted successfully");
+        if (response.status == 200){
+          console.log(response.json())
+        } else if (response.status == 269) {
+          console.log("Username Taken");
         } else {
           console.error("Form submission failed");
         }

@@ -4,11 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from models import User, Message, Session
 from database import Users, Messages, Sessions
+from nanoid import generate
 
 app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "mongodb://localhost:27017",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -19,11 +21,22 @@ app.add_middleware(
 )
 
 @app.post('/register_user/')
-def register_user(user: User):
-    content = {"UserID": "1234", "UserName":user.Username}
-    return Response(content = json.dumps(content), status_code=200, headers={
-        'Content-Type': 'application/json'
-    })
+async def register_user(user: User):
+    check = await Users.find_one({"Username":f"{user.username}"})
+    if check == None: 
+        id = generate(size=8)   
+        await Users.insert_one({
+            "id": id,
+            "Username": user.username,
+            "Password": user.password,
+            "Status": "Online"
+        })
+        content = {"UserID": id, "Username":user.username}
+        return Response(content = json.dumps(content), status_code=200, headers={
+            'Content-Type': 'application/json'
+        })
+    else:
+        return Response(status_code=269)
 
 @app.get('/load_details/{session_id}')
 def Load_Session_Details(session_id: int):

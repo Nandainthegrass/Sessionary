@@ -3,8 +3,8 @@ from pydantic import BaseModel, Field
 from uuid import uuid4
 
 class User(BaseModel):
-    Username: str
-    Password: str
+    username: str
+    password: str
 
 
 class Message(BaseModel):
