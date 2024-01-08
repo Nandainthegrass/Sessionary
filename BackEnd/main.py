@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Response
-import requests
+import json
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from models import User, Message, Session
+from database import Users, Messages, Sessions
 
 app = FastAPI()
 
@@ -15,20 +17,13 @@ app.add_middleware(
     allow_methods = ["*"],
     allow_headers = ["*"]
 )
-class User(BaseModel):
-    username: str
-    password: str
-
-class Message(BaseModel):
-    data: str
-    sender_id: int
-    TimeStamp: str
-
 
 @app.post('/register_user/')
 def register_user(user: User):
-    print(user.username)
-    return Response(content={"UserID": 1234, "UserName":user.username}, status_code=200)
+    content = {"UserID": "1234", "UserName":user.Username}
+    return Response(content = json.dumps(content), status_code=200, headers={
+        'Content-Type': 'application/json'
+    })
 
 @app.get('/load_details/{session_id}')
 def Load_Session_Details(session_id: int):
