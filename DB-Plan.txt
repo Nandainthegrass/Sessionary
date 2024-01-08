@@ -32,3 +32,9 @@ Step 5: Message Recieved
 	messageid : "data", "timestamp"
 
 	
+
+
+200 = Ok, Success
+269 = Username Taken
+220 = Invalid User
+225 = Password doesn't Match

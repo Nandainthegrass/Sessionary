@@ -38,6 +38,20 @@ async def register_user(user: User):
     else:
         return Response(status_code=269)
 
+@app.post('/Login/')
+async def login_user(user:User):
+    check = await Users.find_one({"Username":f"{user.username}"})
+    if check == None:
+        return Response(status_code=220)#User Doesn't Exist/ Invalid User
+    else:
+        if user.password == check['Password']:
+            content = {"UserID": check['id'], "Username":check['Username']}
+            return Response(content = json.dumps(content), status_code=200, headers={
+            'Content-Type': 'application/json'
+            })
+        else:
+            return Response(status_code=225)#Password doesn't match
+
 @app.get('/load_details/{session_id}')
 def Load_Session_Details(session_id: int):
     return {
