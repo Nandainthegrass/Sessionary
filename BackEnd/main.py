@@ -29,7 +29,7 @@ async def register_user(user: User):
             "id": id,
             "Username": user.username,
             "Password": user.password,
-            "Status": "Online"
+            "Status": "Offline"
         })
         content = {"UserID": id, "Username":user.username}
         return Response(status_code=200)
@@ -49,6 +49,9 @@ async def login_user(user:User):
             })
         else:
             return Response(status_code=401)#Password doesn't match
+@app.get('/Load_User_Details/{UserID}')
+async def Load_User(UserID: str):
+    pass
 
 @app.websocket("/connection/{UserID}")
 async def connection(UserID: str, websocket: WebSocket):
