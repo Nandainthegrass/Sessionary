@@ -27,7 +27,7 @@ function Signup() {
         console.log(`UserId: ${UserID} and UserName: ${Username}`);
         setMessage("Signed up successfully! Redirecting to login");
         setTimeout(() => navigate("/login"), 1000);
-      } else if (response.status == 269) {
+      } else if (response.status == 409) {
         setMessage("Username Taken. Try a different username!");
       } else {
         setMessage("Submission failed. Try again.");

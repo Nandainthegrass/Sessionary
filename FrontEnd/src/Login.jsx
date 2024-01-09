@@ -24,9 +24,9 @@ function Login() {
         let Username = data.Username;
         console.log(`UserId: ${UserID} and UserName: ${Username}`);
         setMessage("Login Successful! Redirect user to a different page");
-      } else if (response.status == 220) {
+      } else if (response.status == 400) {
         setMessage("User Doesn't Exist!");
-      } else if (response.status == 225) {
+      } else if (response.status == 401) {
         setMessage("Password doesn't match!");
       } else {
         setMessage("Submission failed. Try again.");
