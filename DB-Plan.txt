@@ -35,6 +35,6 @@ Step 5: Message Recieved
 
 
 200 = Ok, Success
-409 = Username Taken
-400 = Invalid User
-401 = Password doesn't Match
+269 = Username Taken
+220 = Invalid User
+225 = Password doesn't Match
