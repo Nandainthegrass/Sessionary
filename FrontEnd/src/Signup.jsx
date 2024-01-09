@@ -21,10 +21,6 @@ function Signup() {
       });
 
       if (response.status == 200) {
-        const data = await response.json();
-        let UserID = data.UserID;
-        let Username = data.Username;
-        console.log(`UserId: ${UserID} and UserName: ${Username}`);
         setMessage("Signed up successfully! Redirecting to login");
         setTimeout(() => navigate("/login"), 1000);
       } else if (response.status == 409) {

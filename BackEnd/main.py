@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, WebSocket
 import json
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from models import User, Message, Session
-from database import Users, Messages, Sessions
+from database import Users
 from nanoid import generate
 
 app = FastAPI()
@@ -32,9 +32,7 @@ async def register_user(user: User):
             "Status": "Online"
         })
         content = {"UserID": id, "Username":user.username}
-        return Response(content = json.dumps(content), status_code=200, headers={
-            'Content-Type': 'application/json'
-        })
+        return Response(status_code=200)
     else:
         return Response(status_code=409)#Username taken
     
@@ -52,24 +50,9 @@ async def login_user(user:User):
         else:
             return Response(status_code=401)#Password doesn't match
 
-@app.get('/load_details/{session_id}')
-def Load_Session_Details(session_id: int):
-    return {
-        session_id : {
-            "UserX 1": "Message",
-            "UserY 1": "Message",
-            "UserX 2": "Message"
-        }
-    }
-
-@app.post('/message_sent/{Session_id}')
-def Send_Messages(Sessage_id: int, message: Message):
-    return None
-
-@app.get('/message_recieve/{Session_id}')
-def Recieve_Messages(Session_id: int):
-    return {
-        "Message": "Data",
-        "TimeStamp": "Time",
-        "Sender": "Name"
-    }
+@app.websocket("/connection/{UserID}")
+async def connection(UserID: str, websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message: {data}")

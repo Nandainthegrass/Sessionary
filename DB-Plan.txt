@@ -17,7 +17,7 @@ Step 2: Establishing Session:
 
 Step 3: Message sent:
 	{
-		messageid: "data", "Sender", "Sessionid", "TimeStamp"
+		messageid: "data", "Sender", "Reciever", "TimeStamp", "read/unread"
 	}
 
 step 4: Message Stored:
@@ -35,6 +35,6 @@ Step 5: Message Recieved
 
 
 200 = Ok, Success
-269 = Username Taken
-220 = Invalid User
-225 = Password doesn't Match
+409 = Username Taken
+400 = Invalid User
+401 = Password doesn't Match

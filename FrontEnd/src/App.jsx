@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Signup from "./SignUp";
+import Signup from "./Signup";
 import Login from "./Login";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
