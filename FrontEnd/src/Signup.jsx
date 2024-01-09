@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Signup() {
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
   async function submitForm(event) {
     event.preventDefault(); //stops default behaviour
     let formData = new FormData(document.getElementById("myForm"));
@@ -23,10 +25,12 @@ function Signup() {
         let UserID = data.UserID;
         let Username = data.Username;
         console.log(`UserId: ${UserID} and UserName: ${Username}`);
-        navigate("/login");
+        setMessage("Signed up successfully! Redirecting to login");
+        setTimeout(() => navigate("/login"), 1000);
       } else if (response.status == 269) {
-        console.log("Username Taken");
+        setMessage("Username Taken. Try a different username!");
       } else {
+        setMessage("Submission failed. Try again.");
         console.error("Form submission failed");
       }
     } catch (error) {
@@ -35,17 +39,27 @@ function Signup() {
   }
   return (
     <div>
-      <form id="myForm">
-        <input type="text" name="username" autoComplete="username"></input>
+      <h1>Sign up!</h1>
+      <form id="myForm" onSubmit={() => submitForm(event)}>
+        <input
+          type="text"
+          name="username"
+          autoComplete="username"
+          required
+        ></input>
+        <br />
+        <br />
         <input
           type="password"
           name="password"
           autoComplete="current-password"
+          required
         ></input>
-        <button type="submit" onClick={() => submitForm(event)}>
-          Submit
-        </button>
+        <br />
+        <br />
+        <button type="submit">Submit</button>
       </form>
+      <p>{message}</p>
     </div>
   );
 }
