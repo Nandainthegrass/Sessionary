@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 motor
-fastapi_socketio
 uuid
 nanoid
+python-jose[cryptography]
+passlib[bcrypt]
