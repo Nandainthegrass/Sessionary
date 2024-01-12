@@ -6,29 +6,37 @@ const WebSocketExample = () => {
   const [websocket, setWebsocket] = useState(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8000/connection/12");
-
-    socket.onopen = () => {
-      console.log("WebSocket connection opened");
-    };
-    socket.onmessage = (event) => {
-      setReceivedMessage(event.data);
-      event.data["data"];
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-    socket.onerror = (event) => {
-      console.error(
-        "Web Socket Error:",
-        event.message,
-        event.code,
-        event.type,
-        event
+    const jtoken = localStorage.getItem("token");
+    const UserId = localStorage.getItem("UserId");
+    try {
+      const [, token] = jtoken.split("Bearer ");
+      const socket = new WebSocket(
+        `ws://localhost:8000/connection/VfxL0lIH?token=${token}`
       );
-    };
-    setWebsocket(socket);
+      socket.onopen = () => {
+        console.log("WebSocket connection opened");
+      };
+      socket.onmessage = (event) => {
+        setReceivedMessage(event.data);
+        event.data["data"];
+      };
+
+      socket.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
+      socket.onerror = (event) => {
+        console.error(
+          "Web Socket Error:",
+          event.message,
+          event.code,
+          event.type,
+          event
+        );
+      };
+      setWebsocket(socket);
+    } catch (err) {
+      console.error("Not working!");
+    }
   }, []);
   // Empty dependency array ensures the effect runs only once on mount
 

@@ -28,6 +28,8 @@ function Login() {
 
         let authorizationHeader = response.headers.get("Authorization");
         console.log(`Authorization Header: ${authorizationHeader}`);
+        localStorage.setItem("UserId", UserID);
+        localStorage.setItem("token", authorizationHeader);
         navigate("/message");
         setMessage("Login Successful! Redirect user to a different page");
       } else if (response.status == 400) {
