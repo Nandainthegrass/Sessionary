@@ -27,7 +27,8 @@ app.add_middleware(
     allow_origins = origins,
     allow_credentials = True,
     allow_methods = ["*"],
-    allow_headers = ["*"]
+    allow_headers = ["*"],
+    expose_headers = ["*"]
 )
 
 @app.post('/register_user/')
@@ -72,16 +73,12 @@ async def login_user(user:User):
             return Response(status_code=401)#Password doesn't match
 
 @app.websocket("/connection/{UserID}")
-async def connection(UserID: str, websocket: WebSocket, token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get('sub')
-        if user_id != UserID:
-            raise HTTPException(status_code=400, detail='Invalid User, Access Denied!')
-    except JWTError:
-        raise HTTPException(status_code=401, detail='Invalid Credentials')
+async def connection(UserID: str, websocket: WebSocket): #, token: str = Depends(oauth2_scheme)
     
     await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"Message: {data}")
+    try:
+        while True:
+            data = await websocket.receive_json()
+            await websocket.send_json({"data":data})
+    except:
+        print("Error")

@@ -5,3 +5,4 @@ uuid
 nanoid
 python-jose[cryptography]
 passlib[bcrypt]
+websockets
