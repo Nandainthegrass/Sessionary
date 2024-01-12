@@ -7,11 +7,11 @@ const WebSocketExample = () => {
 
   useEffect(() => {
     const jtoken = localStorage.getItem("token");
-    const UserId = localStorage.getItem("UserId");
+    const UserId = localStorage.getItem("UserIDj");
     try {
       const [, token] = jtoken.split("Bearer ");
       const socket = new WebSocket(
-        `ws://localhost:8000/connection/VfxL0lIH?token=${token}`
+        `ws://localhost:8000/connection/${UserId}?token=${token}`
       );
       socket.onopen = () => {
         console.log("WebSocket connection opened");
