@@ -1,7 +1,9 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   async function submitForm(event) {
     event.preventDefault(); //stops default behaviour
@@ -23,6 +25,10 @@ function Login() {
         let UserID = data.UserID;
         let Username = data.Username;
         console.log(`UserId: ${UserID} and UserName: ${Username}`);
+
+        let authorizationHeader = response.headers.get("Authorization");
+        console.log(`Authorization Header: ${authorizationHeader}`);
+        navigate("/message");
         setMessage("Login Successful! Redirect user to a different page");
       } else if (response.status == 400) {
         setMessage("User Doesn't Exist!");

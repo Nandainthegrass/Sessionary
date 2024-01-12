@@ -28,6 +28,7 @@ app.add_middleware(
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
+    expose_headers = ["*"],
     expose_headers = ["*"]
 )
 
@@ -85,7 +86,7 @@ async def connection(UserID: str, websocket: WebSocket):#, token: str = Depends(
     await websocket.accept()
     try:
         while True:
-            data = await websocket.recieve_text()
-            print(data)
+            data = await websocket.receive_json()
+            await websocket.send_json({"data":data})
     except:
-        pass
+        print("Error")
