@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from models import User, Message, Session
-from database import Users
+from database import Users, Sessions
 from nanoid import generate
 
 app = FastAPI()
@@ -28,7 +28,6 @@ app.add_middleware(
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
-    expose_headers = ["*"],
     expose_headers = ["*"]
 )
 
@@ -43,7 +42,6 @@ async def register_user(user: User):
             "Password": pwd_context.hash(user.password),
             "Status": "Offline"
         })
-        content = {"UserID": id, "Username":user.username}
         return Response(status_code=200)
     else:
         return Response(status_code=409)#Username taken
@@ -55,6 +53,14 @@ def create_access_token(UserID: str):
     to_encode = {"exp": expire, **token_data}
     jwt_token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return jwt_token
+
+@app.get('/test/{UserID}')
+async def testdb(UserID: str):
+
+    sessions = await Sessions.find({"Users": {"$elemMatch": {"$eq": UserID}}}).to_list(length=None)
+    session_ids = [session["SessionID"] for session in sessions]
+
+    return Response(content=json.dumps({"data": session_ids}))
 
 @app.post('/Login/')
 async def login_user(user:User):
@@ -74,15 +80,18 @@ async def login_user(user:User):
             return Response(status_code=401)#Password doesn't match
 
 @app.websocket("/connection/{UserID}")
-async def connection(UserID: str, websocket: WebSocket):#, token: str = Depends(oauth2_scheme)
-    '''try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get('sub')
-        if user_id != UserID:
-            raise HTTPException(status_code=400, detail='Invalid User, Access Denied!')
-    except JWTError:
-        raise HTTPException(status_code=401, detail='Invalid Credentials')
-    '''
+async def connection(UserID: str, websocket: WebSocket, token: str = None):
+    if token is None:
+        raise HTTPException(status_code=400, detail="User Token Missing")
+    else:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            user_id: str = payload.get('sub')
+            if user_id != UserID:
+                raise HTTPException(status_code=400, detail='Invalid User, Access Denied!')
+        except JWTError:
+            raise HTTPException(status_code=401, detail='Invalid Credentials')
+    
     await websocket.accept()
     try:
         while True:
@@ -90,3 +99,4 @@ async def connection(UserID: str, websocket: WebSocket):#, token: str = Depends(
             await websocket.send_json({"data":data})
     except:
         print("Error")
+        await websocket.close()

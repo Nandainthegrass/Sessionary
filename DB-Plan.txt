@@ -35,7 +35,6 @@ An Authentication_Token is generated here for the Users session and status is up
 
 Format in Which the entire Load Details is Sent
 {
-	Authentication_Token: {TOKEN}
 	SessionId: UserIds: {
 					UserID: Name
 				},
