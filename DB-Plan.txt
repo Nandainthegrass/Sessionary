@@ -35,12 +35,12 @@ An Authentication_Token is generated here for the Users session and status is up
 
 Format in Which the entire Load Details is Sent
 {
-	SessionId: UserIds: {
+	SessionId: {UserIds: {
 					UserID: Name
 				},
 				Messages:{
 					MessageID: "data", "TimeStamp", "Sender"
-				}
+				}}
 	SessionId2: UserIds: {
 					UserID: Name
 				},
@@ -60,17 +60,15 @@ step 4: Messages Sent:
 
 	Sent from client Side as:
 		{
-			Authentication_Token: {TOKEN}
 			SessionID:{
 				Message: "data", "TimeStamp", "Sender"
 			}
 		}
 	
-	Server Authenticates this Token first and then stores the Messages
+
 
 	Sent from Server to Clients as:
 		{
-			Authentication_Token: {TOKEN}
 			SessionID:{
 				MessageID: "data", "TimeStamp", "Sender"
 			}
@@ -98,4 +96,52 @@ Messages
 	Data: {Data},
 	TimeStamp: {Time},
 	SenderID: {USERID}
+}
+
+
+
+Search:_______________ [Invite]
+
+sent from client to server
+{
+	type: Search,
+	Username: Username
+}
+
+server will search for user
+
+case 1: User Exists
+
+Sent from server to the searched user:
+
+{
+	type: Search,
+	UserName: UserName of the Person wanting to talk to you
+}
+
+{
+	type: Search,
+	Status: Accepted or Rejected
+}
+
+case 2: User exists but Offline
+
+{
+	type: Search,
+	Status: User is offline cannot establish session
+}
+
+case 3: User does not exist:
+
+{
+	type: Search,
+	Status: No User KYS
+}
+
+if Accepted:
+Create a Session Document in DataBase
+
+Send to both Users
+SessionID: {
+	Users: ["UserId of the other user": Username]
 }

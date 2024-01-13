@@ -1,12 +1,12 @@
 from fastapi import FastAPI, Response, WebSocket, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.responses import JSONResponse
 import json
 from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from models import User, Message, Session
-from database import Users, Sessions
+from database import Users, Sessions, Messages
 from nanoid import generate
 
 app = FastAPI()
@@ -15,7 +15,6 @@ SECRET_KEY = "35fd6282e2e929ad65cb27564ee7dd71884928de60a516573eb6cd1bbdac9ec6"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 origins = [
@@ -56,11 +55,34 @@ def create_access_token(UserID: str):
 
 @app.get('/test/{UserID}')
 async def testdb(UserID: str):
-
-    sessions = await Sessions.find({"Users": {"$elemMatch": {"$eq": UserID}}}).to_list(length=None)
-    session_ids = [session["SessionID"] for session in sessions]
-
-    return Response(content=json.dumps({"data": session_ids}))
+    pipeline = [
+        {"$match": {"id": UserID}},
+        {"$lookup": {"from": "Sessions", "localField": "id", "foreignField": "Users", "as": "userSessions"}},
+        {"$unwind": "$userSessions"},
+        {"$lookup": {"from": "Messages", "localField": "userSessions.SessionID", "foreignField": "SessionID", "as": "sessionMessages"}},
+        {"$lookup": {"from": "Users", "localField": "userSessions.Users", "foreignField": "id", "as": "sessionUsers"}},
+        {"$group": {
+            "_id": "$userSessions.SessionID",
+            "UserIds": {"$addToSet": {"UserID": "$sessionUsers.id", "Name": "$sessionUsers.Username"}},
+            "Messages": {
+                "$push": {
+                    "MessageID": "$sessionMessages.MessageID",
+                    "Data": "$sessionMessages.Data",
+                    "TimeStamp": "$sessionMessages.TimeStamp",
+                    "SenderID": "$sessionMessages.SenderID"
+                }
+            }
+        }},
+        {"$project": {
+            "_id": 0,
+            "SessionId": "$_id",
+            "UserIds": 1,
+            "Messages": 1
+        }}
+    ]  
+    content = await Users.aggregate(pipeline=pipeline).to_list(length=None)
+    print(content)
+    return JSONResponse(content={"content": content})
 
 @app.post('/Login/')
 async def login_user(user:User):
@@ -82,21 +104,22 @@ async def login_user(user:User):
 @app.websocket("/connection/{UserID}")
 async def connection(UserID: str, websocket: WebSocket, token: str = None):
     if token is None:
-        raise HTTPException(status_code=400, detail="User Token Missing")
+        return Response(status_code=400, detail="User Token Missing")
     else:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             user_id: str = payload.get('sub')
             if user_id != UserID:
-                raise HTTPException(status_code=400, detail='Invalid User, Access Denied!')
+                return Response(status_code=400, detail='Invalid User, Access Denied!')
         except JWTError:
-            raise HTTPException(status_code=401, detail='Invalid Credentials')
+            return Response(status_code=401, detail='Invalid Credentials')
     
     await websocket.accept()
     try:
         while True:
-            data = await websocket.receive_json()
-            await websocket.send_json({"data":data})
+            content = await websocket.receive_json()
+            data = json.loads(content)
+
+            await websocket.send_json(json.dumps(data))
     except:
         print("Error")
-        await websocket.close()

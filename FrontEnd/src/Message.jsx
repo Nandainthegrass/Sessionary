@@ -7,7 +7,7 @@ const WebSocketExample = () => {
 
   useEffect(() => {
     const jtoken = localStorage.getItem("token");
-    const UserId = localStorage.getItem("UserIDj");
+    const UserId = localStorage.getItem("UserID");
     try {
       const [, token] = jtoken.split("Bearer ");
       const socket = new WebSocket(
@@ -17,7 +17,8 @@ const WebSocketExample = () => {
         console.log("WebSocket connection opened");
       };
       socket.onmessage = (event) => {
-        setReceivedMessage(event.data);
+        let data = JSON.parse(event.data)
+        setReceivedMessage(data);
         event.data["data"];
       };
 
