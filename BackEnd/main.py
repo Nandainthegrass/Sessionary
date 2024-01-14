@@ -117,9 +117,9 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
     await websocket.accept()
     try:
         while True:
-            content = await websocket.receive_json()
+            content = await websocket.receive_text()
             data = json.loads(content)
 
-            await websocket.send_json(json.dumps(data))
+            await websocket.send_text(data["username"])
     except:
         print("Error")

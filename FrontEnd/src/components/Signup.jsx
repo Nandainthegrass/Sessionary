@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import "../styles/Signup.css";
 
 function Signup() {
   const navigate = useNavigate();
@@ -34,29 +35,30 @@ function Signup() {
     }
   }
   return (
-    <div>
-      <h1>Sign up!</h1>
-      <form id="myForm" onSubmit={() => submitForm(event)}>
-        <input
-          type="text"
-          name="username"
-          autoComplete="username"
-          required
-        ></input>
-        <br />
-        <br />
-        <input
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          required
-        ></input>
-        <br />
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-      <p>{message}</p>
-    </div>
+    <>
+      <div className="sign-container">
+        <h1>Sign up!</h1>
+        <form id="myForm" onSubmit={() => submitForm(event)}>
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            className="tf"
+            required
+          ></input>
+          <input
+            type="password"
+            name="password"
+            className="tf"
+            autoComplete="current-password"
+            required
+          ></input>
+
+          <button type="submit">Submit</button>
+        </form>
+        <p>{message}</p>
+      </div>
+    </>
   );
 }
 
