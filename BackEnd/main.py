@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, WebSocket, Depends, HTTPException
+from fastapi import FastAPI, Response, WebSocket, Depends, HTTPException, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 import json
 from datetime import datetime, timedelta
@@ -20,6 +20,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 origins = [
     "http://localhost:5173",
     "mongodb://localhost:27017",
+    "http://192.168.29.40:5173",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -101,6 +102,24 @@ async def login_user(user:User):
         else:
             return Response(status_code=401)#Password doesn't match
 
+class Connection_Manager:
+    def __init__(self):
+        self.connections: dict = {}
+    async def connect(self, UserID: str, websocket: WebSocket):
+        result = await Users.update_one({"id": UserID}, {"$set":{"Status": "Online"}})
+        await websocket.accept()
+        self.connections[UserID] = websocket
+    async def Send_Message(self, UserID: str, message):
+        socket = self.connections[UserID]
+        await socket.send_text(message)
+    async def disconnect(self, UserID: str):
+        result = await Users.update_one({"id": UserID}, {"$set":{"Status": "Offline"}})
+        del self.connections[UserID]
+    async def broadcast(self, message):
+        for connection in self.connections.values():
+            connection.send_text(message)
+
+Manager = Connection_Manager()
 @app.websocket("/connection/{UserID}")
 async def connection(UserID: str, websocket: WebSocket, token: str = None):
     if token is None:
@@ -113,13 +132,34 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
                 return Response(status_code=400, detail='Invalid User, Access Denied!')
         except JWTError:
             return Response(status_code=401, detail='Invalid Credentials')
-    
-    await websocket.accept()
+    await Manager.connect(UserID=UserID, websocket=websocket)
     try:
         while True:
             content = await websocket.receive_text()
             data = json.loads(content)
 
-            await websocket.send_text(data["username"])
+            check = await Users.find_one({"Username": data['username']})
+
+            if check is None:
+                reply = {
+                    "type": "Error",
+                    "Details": "User Not Found"
+                }
+                await websocket.send_text(json.dumps(reply))
+            else:
+                if check['Status'] == "Offline":
+                    reply = {
+                        "type": "Error",
+                        "Details": "User isn't Online"
+                    }
+                    await websocket.send_text(json.dumps(reply))
+                else:
+                    Person = await Users.find_one({"id": UserID})
+                    Username = Person["Username"]
+                    message = {
+                        "type": "search",
+                        "Username": Username
+                    }
+                    await Manager.Send_Message(check['id'], message=json.dumps(message))
     except:
-        print("Error")
+        print("kys")
