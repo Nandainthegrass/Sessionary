@@ -113,11 +113,11 @@ class Connection_Manager:
         socket = self.connections[UserID]
         await socket.send_text(message)
     async def disconnect(self, UserID: str):
-        result = await Users.update_one({"id": UserID}, {"$set":{"Status": "Offline"}})
         del self.connections[UserID]
+        result = await Users.update_one({"id": UserID}, {"$set":{"Status": "Offline"}})
     async def broadcast(self, message):
         for connection in self.connections.values():
-            connection.send_text(message)
+            await connection.send_text(message)
 
 Manager = Connection_Manager()
 @app.websocket("/connection/{UserID}")
@@ -161,5 +161,6 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
                         "Username": Username
                     }
                     await Manager.Send_Message(check['id'], message=json.dumps(message))
-    except:
-        print("kys")
+    except WebSocketDisconnect:
+        print(f"Websocket Disconnect for User: {UserID}")
+        await Manager.disconnect(UserID=UserID)
