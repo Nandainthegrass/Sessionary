@@ -3,12 +3,18 @@ import axios from "axios";
 import Collapsible from "./messagecomp/Collapsible";
 import Container from "./messagecomp/Container";
 import Invite from "./messagecomp/Invite";
+import "../styles/Message.css";
 
 const WebSocketExample = () => {
   const [receivedMessage, setReceivedMessage] = useState("");
   const [websocket, setWebsocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userExists, setUserExists] = useState(null);
+  const [divState, setDivState] = useState(false);
+  const [requests, setRequests] = useState([]);
+
+  const jtoken = localStorage.getItem("token");
+  const UserId = localStorage.getItem("UserID");
 
   const handleRes = (val) => {
     if (websocket) {
@@ -31,11 +37,14 @@ const WebSocketExample = () => {
       websocket.send(JSON.stringify({ type: "search", username: message }));
     }
   };
+  const loadRequest = () => {
+    if (websocket) {
+      websocket.send(JSON.stringify({ type: "pending requests" }));
+    }
+  };
 
   let data;
   useEffect(() => {
-    const jtoken = localStorage.getItem("token");
-    const UserId = localStorage.getItem("UserID");
     try {
       const [, token] = jtoken.split("Bearer ");
       axios
@@ -64,7 +73,9 @@ const WebSocketExample = () => {
         } else if (data["type"] == "Error") {
           alert(data["Details"]);
         }
-        console.log(event.data);
+        if (data["type"] == "pending requests") {
+          setRequests(data["Username"]);
+        }
       };
 
       socket.onclose = () => {
@@ -84,7 +95,39 @@ const WebSocketExample = () => {
 
   return (
     <div>
-      <Invite searchUser={searchUser} />
+      <nav>
+        <div className="empty">
+          <p className="title">LOGO</p>
+        </div>
+        <div>
+          <Invite searchUser={searchUser} />
+          <button
+            onClick={() => {
+              loadRequest();
+              setDivState(!divState);
+            }}
+          >
+            <i
+              style={{
+                fontSize: "24px",
+                backgroundColor: "white",
+                color: "black",
+              }}
+              className="fa"
+            >
+              &#xf0f3;
+            </i>
+          </button>
+        </div>
+      </nav>
+
+      {divState && (
+        <div className="collapse">
+          {requests.map((request) => (
+            <li key={request}>{request}'s request</li>
+          ))}
+        </div>
+      )}
       <div>
         {userExists && (
           <Collapsible

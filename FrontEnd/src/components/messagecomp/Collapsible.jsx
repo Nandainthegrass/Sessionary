@@ -4,7 +4,7 @@ const Collapsible = ({ receivedMessage, onhandleRes }) => {
   return (
     <>
       <div id="collapsible">
-        <p>{receivedMessage}</p>
+        <p style={{ color: "greenyellow" }}>{receivedMessage}</p>
         <p>Would you like to accept the request?</p>
         <button onClick={() => onhandleRes(1)}>Yes</button>
         <button onClick={() => onhandleRes(0)}>No</button>

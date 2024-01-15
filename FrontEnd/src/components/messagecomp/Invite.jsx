@@ -1,15 +1,18 @@
 import React, { useState } from "react";
+import "../../styles/Message.css";
 
 const Invite = ({ searchUser }) => {
   const [message, setMessage] = useState("");
+
   return (
     <>
-      <strong>Invite a Friend!</strong>
       <div>
+        <label htmlFor="invite">Invite a friend: </label>
         <input
           placeholder="Username"
           type="text"
           value={message}
+          id="invite"
           onChange={(e) => setMessage(e.target.value)}
         />
         <button
@@ -17,10 +20,8 @@ const Invite = ({ searchUser }) => {
             searchUser(message);
           }}
         >
-          Search
+          Invite
         </button>
-        <br />
-        <br />
       </div>
     </>
   );

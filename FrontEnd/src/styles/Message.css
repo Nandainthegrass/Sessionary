@@ -1,0 +1,19 @@
+body{
+    font-family: "Poppins",sans-serif;
+    margin: 0;
+    padding: 0;
+}
+nav{
+    background-color: #151618;
+    color: whitesmoke;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 10vh;
+}
+nav div{
+    margin-left: 1vw;
+    margin-right: 1vw;
+}
