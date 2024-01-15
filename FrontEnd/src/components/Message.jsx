@@ -11,10 +11,9 @@ const WebSocketExample = () => {
     const jtoken = localStorage.getItem("token");
     const UserId = localStorage.getItem("UserID");
     try {
+      const [, token] = jtoken.split("Bearer ");
       axios
-        .get(`http://localhost:8000/test/${UserId}`, {
-          headers: { Authorization: `Bearer ${jtoken}` },
-        })
+        .get(`http://localhost:8000/Load_Details/${UserId}?token=${token}`)
         .then((response) => {
           setLoading(false);
           console.log("GET request successful:", response.data);
@@ -23,7 +22,7 @@ const WebSocketExample = () => {
           console.error("GET request failed:", error);
         });
 
-      const [, token] = jtoken.split("Bearer ");
+      
       const socket = new WebSocket(
         `ws://localhost:8000/connection/${UserId}?token=${token}`
       );

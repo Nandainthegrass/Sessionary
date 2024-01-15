@@ -119,29 +119,52 @@ Sent from server to the searched user:
 	UserName: UserName of the Person wanting to talk to you
 }
 
-{
-	type: Search,
-	Status: Accepted or Rejected
-}
+on Recieving the above ^ json from the frontend
 
-case 2: User exists but Offline
+a pop should come for the User where he has the option to accept or reject the request
 
-{
-	type: Search,
-	Status: User is offline cannot establish session
-}
+if the user Rejects the request:
+	client should send this package in the websocket
+	{
+		type: "Request",
+		Username: The UserName of the User that had initially sent the request
+		Accepted: 0{indicating that he has rejected it}
+	}
 
-case 3: User does not exist:
+if the user accepts the request:
+	client should send this package in the websocket
+	{
+		type: "Request",
+		Username: The UserName of the User that had initially sent the request
+		Accepted: 1{indicating that he has accepted it}
+	}
 
-{
-	type: Search,
-	Status: No User KYS
-}
+	when this is recieved the backend will create a session and send back this to the frontend
+	this will be sent to both the users that have established a session:
+		{
+            "type": "Session",
+            "SessionID": SessionID,
+            "Users": {
+                UserID: Username
+            }
+        }
+	Here the UserID and Username will be of the user respectively 
 
-if Accepted:
-Create a Session Document in DataBase
+	for example if Winston accepted to establish a session with Nanda
 
-Send to both Users
-SessionID: {
-	Users: ["UserId of the other user": Username]
-}
+	Winston will recieve:
+		{
+            "type": "Session",
+            "SessionID": 12345,
+            "Users": {
+                Nanda's UserID: Nanda
+            }
+        }
+	Nanda will recieve:
+		{
+            "type": "Session",
+            "SessionID": 12345,
+            "Users": {
+                "Winston's UserID": Winston
+            }
+        }

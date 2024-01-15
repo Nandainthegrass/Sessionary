@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, WebSocket, Depends, HTTPException, WebSocketDisconnect
+from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 import json
 from datetime import datetime, timedelta
@@ -54,8 +54,18 @@ def create_access_token(UserID: str):
     jwt_token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return jwt_token
 
-@app.get('/test/{UserID}')
-async def testdb(UserID: str):
+@app.get('/Load_Details/{UserID}')
+async def Load_Details(UserID: str, token: str = None):
+    if token is None:
+        return Response(status_code=400, detail="User Token Missing")
+    else:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            user_id: str = payload.get('sub')
+            if user_id != UserID:
+                return Response(status_code=400, detail='Invalid User, Access Denied!')
+        except JWTError:
+            return Response(status_code=401, detail='Invalid Credentials')
     pipeline = [
         {"$match": {"id": UserID}},
         {"$lookup": {"from": "Sessions", "localField": "id", "foreignField": "Users", "as": "userSessions"}},
@@ -119,6 +129,65 @@ class Connection_Manager:
         for connection in self.connections.values():
             await connection.send_text(message)
 
+
+async def Search_User(Manager, data, UserID: str):
+    check = await Users.find_one({"Username": data['username']})
+    if check is None:
+        reply = {
+            "type": "Error",
+            "Details": "User Not Found"
+        }
+        await Manager.Send_Message(UserID, json.dumps(reply))
+    else:
+        if check['Status'] == "Offline":
+            reply = {
+                "type": "Error",
+                "Details": "User isn't Online"
+            }
+            await Manager.Send_Message(UserID, json.dumps(reply))
+        else:
+            Person = await Users.find_one({"id": UserID}, {"Username": 1})
+            message = {
+                "type": "search",
+                "Username": Person["Username"]
+            }
+            await Manager.Send_Message(check['id'], message=json.dumps(message))
+
+
+async def Request_User(Manager, data, UserID: str):
+    reciever = await Users.find_one({"Username": data['Username']})
+    sender = await Users.find_one({'id': UserID})
+    if data["Accepted"] == 0:
+        if reciever['Status'] == "Online":
+            reply = {
+                "type": "Request",
+                "Response": f"{sender['Username']} has rejected your request!"
+            }
+            await Manager.Send_Message(reciever['id'], message = json.dumps(reply))
+    else:
+        id = generate()
+        await Sessions.insert_one({
+            "SessionID": id,
+            "Users": [sender['id'], reciever['id']]
+        })
+        sender_reply = {
+            "type": "Session",
+            "SessionID": id,
+            "Users": {
+                reciever['id']: reciever['Username']
+            }
+        }
+        await Manager.Send_Message(sender['id'], message = json.dumps(sender_reply))
+        reciever_reply = {
+            "type": "Session",
+            "SessionID": id,
+            "Users": {
+                sender['id']: sender['Username']
+            }
+        }
+        await Manager.Send_Message(reciever['id'], message = json.dumps(reciever_reply))
+
+
 Manager = Connection_Manager()
 @app.websocket("/connection/{UserID}")
 async def connection(UserID: str, websocket: WebSocket, token: str = None):
@@ -137,30 +206,11 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
         while True:
             content = await websocket.receive_text()
             data = json.loads(content)
-
-            check = await Users.find_one({"Username": data['username']})
-
-            if check is None:
-                reply = {
-                    "type": "Error",
-                    "Details": "User Not Found"
-                }
-                await websocket.send_text(json.dumps(reply))
-            else:
-                if check['Status'] == "Offline":
-                    reply = {
-                        "type": "Error",
-                        "Details": "User isn't Online"
-                    }
-                    await websocket.send_text(json.dumps(reply))
-                else:
-                    Person = await Users.find_one({"id": UserID})
-                    Username = Person["Username"]
-                    message = {
-                        "type": "search",
-                        "Username": Username
-                    }
-                    await Manager.Send_Message(check['id'], message=json.dumps(message))
+            if data['type'] == "search":
+                await Search_User(Manager=Manager, data=data, UserID=UserID)
+            elif data['type'] == "request":
+                await Request_User(Manager=Manager, data=data, UserID=UserID)
+                
     except WebSocketDisconnect:
         print(f"Websocket Disconnect for User: {UserID}")
         await Manager.disconnect(UserID=UserID)
