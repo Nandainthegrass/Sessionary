@@ -6,7 +6,9 @@ const WebSocketExample = () => {
   const [receivedMessage, setReceivedMessage] = useState("");
   const [websocket, setWebsocket] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userExists, setUserExists] = useState(null);
 
+  let data;
   useEffect(() => {
     const jtoken = localStorage.getItem("token");
     const UserId = localStorage.getItem("UserID");
@@ -22,7 +24,6 @@ const WebSocketExample = () => {
           console.error("GET request failed:", error);
         });
 
-      
       const socket = new WebSocket(
         `ws://localhost:8000/connection/${UserId}?token=${token}`
       );
@@ -30,7 +31,16 @@ const WebSocketExample = () => {
         console.log("WebSocket connection opened");
       };
       socket.onmessage = (event) => {
-        setReceivedMessage(event.data);
+        data = JSON.parse(event.data);
+        if (data["type"] == "search") {
+          setReceivedMessage(
+            `${data["Username"]} wants to send you a message!`
+          );
+          setUserExists(data["Username"]);
+        } else if (data["type"] == "Error") {
+          alert(data["Details"]);
+        }
+        console.log(event.data);
       };
 
       socket.onclose = () => {
@@ -46,10 +56,21 @@ const WebSocketExample = () => {
   }, []);
   // Empty dependency array ensures the effect runs only once on mount
 
-  const sendMessage = () => {
+  const searchUser = () => {
     if (websocket && message.trim() !== "") {
       websocket.send(JSON.stringify({ type: "search", username: message }));
       setMessage(""); // Clear the input after sending
+    }
+  };
+  const handleRes = (val) => {
+    if (websocket) {
+      websocket.send(
+        JSON.stringify({
+          type: "request",
+          username: `${userExists}`,
+          Accepted: `${val}`,
+        })
+      );
     }
   };
 
@@ -57,7 +78,7 @@ const WebSocketExample = () => {
   return (
     <div>
       <div>
-        <strong>Invite a friend!</strong> {receivedMessage}
+        <strong>Invite a friend!</strong>
       </div>
       <div>
         <input
@@ -66,9 +87,54 @@ const WebSocketExample = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button onClick={sendMessage}>Send Message</button>
+        <button onClick={searchUser}>Search</button>
         <br />
         <br />
+        <p>{receivedMessage}</p>
+        <div>
+          {userExists && (
+            <>
+              <p>Would you like to accept the request?</p>
+              <button
+                onClick={() => {
+                  handleRes(1);
+                }}
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => {
+                  handleRes(0);
+                }}
+              >
+                No
+              </button>
+            </>
+          )}
+          <div>
+            <button
+              id="open"
+              onClick={() => {
+                const scalingDiv = document.getElementById("scaling-div");
+                scalingDiv.style.display = "flex";
+              }}
+            >
+              Open
+            </button>
+            <div id="scaling-div" style={{ display: "none" }}>
+              Hey mom
+              <button
+                id="close"
+                onClick={() => {
+                  const scalingDiv = document.getElementById("scaling-div");
+                  scalingDiv.style.display = "none";
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
