@@ -184,11 +184,11 @@ AND CREATES A SESSION IF THE REQUEST IS ACCEPTED
 async def Request_User(Manager, data, UserID: str):
     reciever = await search_user_by_username(data['username'])
     sender = await Users.find_one({'id': UserID})
-    if data["Accepted"] == 0:
+    if data["Accepted"] == "0":
         if reciever['Status'] == "Online":
             reply = {
-                "type": "Request",
-                "Response": f"{sender['Username']} has rejected your request!"
+                "type": "Error",
+                "Details": f"{sender['Username']} has rejected your request!"
             }
             await Manager.Send_Message(reciever['id'], message = json.dumps(reply))
     else:
