@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Collapsible from "./messagecomp/Collapsible";
+import Container from "./messagecomp/Container";
+import Invite from "./messagecomp/Invite";
 
 const WebSocketExample = () => {
-  const [message, setMessage] = useState("");
   const [receivedMessage, setReceivedMessage] = useState("");
   const [websocket, setWebsocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userExists, setUserExists] = useState(null);
+
+  const handleRes = (val) => {
+    if (websocket) {
+      websocket.send(
+        JSON.stringify({
+          type: "request",
+          username: `${userExists}`,
+          Accepted: `${val}`,
+        })
+      );
+    }
+    const collapsible = document.getElementById("collapsible");
+    if (collapsible) {
+      collapsible.parentNode.removeChild(collapsible);
+    }
+  };
+
+  const searchUser = (message) => {
+    if (websocket && message.trim() !== "") {
+      websocket.send(JSON.stringify({ type: "search", username: message }));
+    }
+  };
 
   let data;
   useEffect(() => {
@@ -56,93 +80,20 @@ const WebSocketExample = () => {
   }, []);
   // Empty dependency array ensures the effect runs only once on mount
 
-  const searchUser = () => {
-    if (websocket && message.trim() !== "") {
-      websocket.send(JSON.stringify({ type: "search", username: message }));
-      setMessage(""); // Clear the input after sending
-    }
-  };
-  const handleRes = (val) => {
-    if (websocket) {
-      websocket.send(
-        JSON.stringify({
-          type: "request",
-          username: `${userExists}`,
-          Accepted: `${val}`,
-        })
-      );
-    }
-  };
-
   if (loading) return <p>Loading...</p>;
 
   return (
     <div>
-      <div>
-        <strong>Invite a friend!</strong>
-      </div>
-      <div>
-        <input
-          placeholder="Username"
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={searchUser}>Search</button>
-        <br />
-        <br />
-      </div>
+      <Invite searchUser={searchUser} />
       <div>
         {userExists && (
-          <div id="winston">
-            <p>{receivedMessage}</p>
-            <p>Would you like to accept the request?</p>
-            <button
-              onClick={() => {
-                handleRes(1);
-                const winstonEl = document.getElementById("winston");
-                if (winstonEl) {
-                  winstonEl.parentNode.removeChild(winstonEl);
-                }
-              }}
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => {
-                handleRes(0);
-                const winstonEl = document.getElementById("winston");
-                if (winstonEl) {
-                  winstonEl.parentNode.removeChild(winstonEl);
-                }
-              }}
-            >
-              No
-            </button>
-          </div>
+          <Collapsible
+            receivedMessage={receivedMessage}
+            onhandleRes={handleRes}
+          />
         )}
         <div>
-          <button
-            id="open"
-            onClick={() => {
-              const scalingDiv = document.getElementById("scaling-div");
-              scalingDiv.style.display = "flex";
-            }}
-          >
-            Open
-          </button>
-          <div id="scaling-div" style={{ display: "none" }}>
-            Hey mom
-            <button
-              id="close"
-              onClick={() => {
-                const scalingDiv = document.getElementById("scaling-div");
-                scalingDiv.style.display = "none";
-              }}
-            >
-              Close
-            </button>
-          </div>
+          <Container />
         </div>
       </div>
     </div>
