@@ -20,6 +20,13 @@ OBJECT THAT STORES ALGORTHIMS FOR THE PASSWORD HASHING AND VERIFICATION
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 '''
+FUNCTION TO SEARCH USER BY USERNAME FROM THE DATABASE
+'''
+async def search_user_by_username(Username):
+    user = await Users.find_one({"Username": Username})
+    return user
+
+'''
 CREATES A NEW USER AND STORES IT IN THE DATABASE
 '''
 async def create_user(user: User):
@@ -125,7 +132,7 @@ FUNCTION THAT HANDLES THE REQUEST TO SEARCH FOR A PARTICULAR USER,
 BY BREAKING DOWN AND PROCESSING THE REQUEST SENT ON THE WEBSOCKET
 '''
 async def Search_User(Manager, data, UserID: str):
-    searched_user = await Users.find_one({"Username": data['username']})
+    searched_user = await search_user_by_username(data['Username'])
     if searched_user is None:
         reply = {
             "type": "Error",
@@ -152,7 +159,7 @@ FUNCTION HANDLES THE REQUEST TO ESTABLISH A SESSION
 AND CREATES A SESSION IF THE REQUEST IS ACCEPTED
 '''
 async def Request_User(Manager, data, UserID: str):
-    reciever = await Users.find_one({"Username": data['Username']})
+    reciever = await search_user_by_username(data['Username'])
     sender = await Users.find_one({'id': UserID})
     if data["Accepted"] == 0:
         if reciever['Status'] == "Online":
@@ -197,14 +204,17 @@ async def Message_Handler(Manager, data, UserID:str):
         "MessageID": id,
         "SessionID": data['SessionID'],
         "Data": data['data'],
-        "TimeStamp": time
+        "TimeStamp": time,
+        "SenderID": UserID
     })
     Sesh = await Sessions.find_one({"SessionID": data["SessionID"]})
+    user = await Users.find_one({"id": UserID})
     Message = {
         "type": "message",
         "SessionID": data['SessionID'],
         "Data": data['data'],
-        'TimeStamp': time
+        'TimeStamp': time,
+        'SenderID': user['Username']
     }
     for user in Sesh['Users']:
         await Manager.Send_Message(user, message = json.dumps(Message))

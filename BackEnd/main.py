@@ -2,8 +2,7 @@ from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 import json
 from fastapi.middleware.cors import CORSMiddleware
-from models import User, Message, Session
-from database import Users, Sessions, Messages
+from models import User
 from Modules import *
 
 app = FastAPI()
@@ -24,7 +23,7 @@ app.add_middleware(
 
 @app.post('/register_user/')
 async def register_user(user: User):
-    check = await Users.find_one({"Username":f"{user.username}"})
+    check = await search_user_by_username(user.username)
     if check == None: 
         await create_user(user=user)
         return Response(status_code=200)
@@ -40,7 +39,7 @@ async def Load_Details(UserID: str, token: str = None):
 
 @app.post('/Login/')
 async def login_user(user:User):
-    check = await Users.find_one({"Username":f"{user.username}"})
+    check = await search_user_by_username(user.username)
     if check == None:
         return Response(status_code=400)#User Doesn't Exist/ Invalid User
     else:
