@@ -60,8 +60,12 @@ step 4: Messages Sent:
 
 	Sent from client Side as:
 		{
-			SessionID:{
-				Message: "data", "TimeStamp", "Sender"
+			type: "Messgae"
+			SessionID: SessionID,
+			Message: {
+				"data": data,
+				"TimeStamp": TimeStamp,
+				"Sender": SenderID
 			}
 		}
 	
