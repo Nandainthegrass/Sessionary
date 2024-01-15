@@ -56,15 +56,15 @@ THE USERID THAT SENT US THIS TOKEN
 '''
 def validate_access_token(UserID: str, token):
     if token is None:
-        return Response(status_code=400, detail="User Token Missing")
+        return Response(status_code=400)
     else:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             user_id: str = payload.get('sub')
             if user_id != UserID:
-                return Response(status_code=400, detail='Invalid User, Access Denied!')
+                return Response(status_code=400)
         except JWTError:
-            return Response(status_code=401, detail='Invalid Credentials')
+            return Response(status_code=401)
 
 '''
 FUNCTION TO VERIFY IF THE ENTERED PASSWORD IS SAME AS THE PASSWORD HASHED IN OUR DATABASE
@@ -126,17 +126,40 @@ class Connection_Manager:
         for connection in self.connections.values():
             await connection.send_text(message)
 
+'''
+FUNCTION TO CHECK IF SESSION ALREADY EXISTS
+'''
+async def Session_Exists(UserID1, UserID2):
+    check1 = await Sessions.find_one({"Users": [UserID1, UserID2]})
+    check2 = await Sessions.find_one({"Users": [UserID2, UserID1]})
+
+    if check1 == None and check2 == None:
+        return False
+    else:
+        return True 
 
 '''
 FUNCTION THAT HANDLES THE REQUEST TO SEARCH FOR A PARTICULAR USER,
 BY BREAKING DOWN AND PROCESSING THE REQUEST SENT ON THE WEBSOCKET
 '''
 async def Search_User(Manager, data, UserID: str):
-    searched_user = await search_user_by_username(data['Username'])
+    searched_user = await search_user_by_username(data['username'])
     if searched_user is None:
         reply = {
             "type": "Error",
             "Details": "User Not Found"
+        }
+        await Manager.Send_Message(UserID, json.dumps(reply))
+    elif searched_user['id'] == UserID:
+        reply = {
+            "type": "Error",
+            "Details": "Cannot Talk To Yourself"
+        }
+        await Manager.Send_Message(UserID, json.dumps(reply))
+    elif await Session_Exists(UserID, searched_user['id']):
+        reply = {
+            "type": "Error",
+            "Details": "Session already exists"
         }
         await Manager.Send_Message(UserID, json.dumps(reply))
     else:
@@ -159,7 +182,7 @@ FUNCTION HANDLES THE REQUEST TO ESTABLISH A SESSION
 AND CREATES A SESSION IF THE REQUEST IS ACCEPTED
 '''
 async def Request_User(Manager, data, UserID: str):
-    reciever = await search_user_by_username(data['Username'])
+    reciever = await search_user_by_username(data['username'])
     sender = await Users.find_one({'id': UserID})
     if data["Accepted"] == 0:
         if reciever['Status'] == "Online":

@@ -130,16 +130,16 @@ a pop should come for the User where he has the option to accept or reject the r
 if the user Rejects the request:
 	client should send this package in the websocket
 	{
-		type: "Request",
-		Username: The UserName of the User that had initially sent the request
+		type: "request",
+		username: The UserName of the User that had initially sent the request
 		Accepted: 0{indicating that he has rejected it}
 	}
 
 if the user accepts the request:
 	client should send this package in the websocket
 	{
-		type: "Request",
-		Username: The UserName of the User that had initially sent the request
+		type: "request",
+		username: The UserName of the User that had initially sent the request
 		Accepted: 1{indicating that he has accepted it}
 	}
 
