@@ -31,12 +31,6 @@ async def register_user(user: User):
         return Response(status_code=409)#Username taken
 
 
-@app.get('/Load_Details/{UserID}')
-async def Load_Details(UserID: str, token: str = None):
-    validate_access_token(UserID=UserID, token=token)
-    content = await Load_User_Session_Details(UserID=UserID)
-    return JSONResponse(content={"content": content})
-
 @app.post('/Login/')
 async def login_user(user:User):
     check = await search_user_by_username(user.username)
@@ -54,6 +48,17 @@ async def login_user(user:User):
         else:
             return Response(status_code=401)#Password doesn't match
 
+
+@app.get('/Load_Details/{UserID}')
+async def Load_Details(UserID: str, token: str = None):
+    validate_access_token(UserID=UserID, token=token)
+    content = await Load_User_Session_Details(UserID=UserID)
+    return JSONResponse(content=content)
+
+@app.get('/Load_Requests/{UserID}')
+async def Load_Requests(UserID: str):
+    content = await Find_User_Requests(UserID)
+    return JSONResponse(content={"requests": content})
 
 Manager = Connection_Manager()
 

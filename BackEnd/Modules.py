@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from models import User
-from database import Users, Sessions, Messages
+from database import Users, Sessions, Messages, Requests
 from nanoid import generate
 
 '''
@@ -77,32 +77,13 @@ def Verify_Password(Password, hashed_password):
 FUNCTION TO LOAD ALL THE CHATS AND SESSIONS THAT THE USER IS INVOLVED IN, INITIATED AT THE TIME OF LOGGING IN
 '''
 async def Load_User_Session_Details(UserID: str):
-    pipeline = [
-        {"$match": {"id": UserID}},
-        {"$lookup": {"from": "Sessions", "localField": "id", "foreignField": "Users", "as": "userSessions"}},
-        {"$unwind": "$userSessions"},
-        {"$lookup": {"from": "Messages", "localField": "userSessions.SessionID", "foreignField": "SessionID", "as": "sessionMessages"}},
-        {"$lookup": {"from": "Users", "localField": "userSessions.Users", "foreignField": "id", "as": "sessionUsers"}},
-        {"$group": {
-            "_id": "$userSessions.SessionID",
-            "UserIds": {"$addToSet": {"UserID": "$sessionUsers.id", "Name": "$sessionUsers.Username"}},
-            "Messages": {
-                "$push": {
-                    "MessageID": "$sessionMessages.MessageID",
-                    "Data": "$sessionMessages.Data",
-                    "TimeStamp": "$sessionMessages.TimeStamp",
-                    "SenderID": "$sessionMessages.SenderID"
-                }
-            }
-        }},
-        {"$project": {
-            "_id": 0,
-            "SessionId": "$_id",
-            "UserIds": 1,
-            "Messages": 1
-        }}
-    ]
-    content = await Users.aggregate(pipeline=pipeline).to_list(length=None)
+    content = {}
+    sessions = await Sessions.find({"Users": UserID}, {"SessionID": 1, "Users": 1}).to_list(length=None)
+    for session in sessions:
+        for user in session.get('Users', []):
+            if user != UserID:
+                user_details = await Users.find_one({"id": user}, {"Username": 1})
+                content[session['SessionID']] = {"Username": user_details["Username"]}
     return content
 
 
@@ -137,6 +118,22 @@ async def Session_Exists(UserID1, UserID2):
         return False
     else:
         return True 
+'''
+FUNCTION TO FIND ALL THE REQUESTS BELONGING TO A USER
+'''
+async def Find_User_Requests(UserID):
+    requests = await Requests.find_one({"UserID": UserID})
+    content = requests['Username']
+    return content
+'''
+FUNCTION TO SEE IF USER HAS ALREADY SENT A REQUEST TO THIS USER BEFORE
+'''
+async def Check_Requests(UserID, Username):
+    check = await Requests.find_one({"UserID": UserID, "Username": Username})
+    if check:
+        return True
+    else:
+        return False
 
 '''
 FUNCTION THAT HANDLES THE REQUEST TO SEARCH FOR A PARTICULAR USER,
@@ -163,23 +160,29 @@ async def Search_User(Manager, data, UserID: str):
         }
         await Manager.Send_Message(UserID, json.dumps(reply))
     else:
-        if searched_user['Status'] == "Offline":
+        user = await Users.find_one({"id": UserID}, {"Username": 1})
+        if await Check_Requests(searched_user['id'], user["Username"]):
             reply = {
                 "type": "Error",
-                "Details": "User isn't Online"
+                "Details": "Request already sent!"
             }
             await Manager.Send_Message(UserID, json.dumps(reply))
         else:
-            user = await Users.find_one({"id": UserID}, {"Username": 1})
-            message = {
-                "type": "search",
-                "Username": user["Username"]
-            }
-            await Manager.Send_Message(searched_user['id'], message=json.dumps(message))
-
+            result = await Requests.find_one({"UserID": searched_user['id']})
+            if result == None:
+                await Requests.insert_one({
+                    "UserID": searched_user['id'],
+                    "Username": [user['Username']]
+                })
+            else:
+                requests = result['Username']
+                requests.append(user['Username'])
+                result = await Requests.update_one({"UserID": searched_user['id']}, {"$set": {"Username": requests}})
+            
 '''
 FUNCTION HANDLES THE REQUEST TO ESTABLISH A SESSION
 AND CREATES A SESSION IF THE REQUEST IS ACCEPTED
+AND REMOVES THE REQUEST FROM THE REQUESTS DATABASE
 '''
 async def Request_User(Manager, data, UserID: str):
     reciever = await search_user_by_username(data['username'])
@@ -192,27 +195,38 @@ async def Request_User(Manager, data, UserID: str):
             }
             await Manager.Send_Message(reciever['id'], message = json.dumps(reply))
     else:
-        id = generate(size=10)
-        await Sessions.insert_one({
-            "SessionID": id,
-            "Users": [sender['id'], reciever['id']]
-        })
-        sender_reply = {
-            "type": "Session",
-            "SessionID": id,
-            "Users": {
-                reciever['id']: reciever['Username']
+        if await Session_Exists(sender['id'], reciever['id']):
+            reply = {
+                "type": "Error",
+                "Details": "Cannot accept Multiple times"
             }
-        }
-        await Manager.Send_Message(sender['id'], message = json.dumps(sender_reply))
-        reciever_reply = {
-            "type": "Session",
-            "SessionID": id,
-            "Users": {
-                sender['id']: sender['Username']
+            await Manager.Send_Message(UserID, message = json.dumps(reply))
+        else:
+            id = generate(size=10)
+            await Sessions.insert_one({
+                "SessionID": id,
+                "Users": [sender['id'], reciever['id']]
+            })
+            sender_reply = {
+                "type": "Session",
+                "SessionID": id,
+                "Users": {
+                    reciever['id']: reciever['Username']
+                }
             }
-        }
-        await Manager.Send_Message(reciever['id'], message = json.dumps(reciever_reply))
+            await Manager.Send_Message(sender['id'], message = json.dumps(sender_reply))
+            reciever_reply = {
+                "type": "Session",
+                "SessionID": id,
+                "Users": {
+                    sender['id']: sender['Username']
+                }
+            }
+            await Manager.Send_Message(reciever['id'], message = json.dumps(reciever_reply))
+    requests = await Requests.find_one({"UserID": UserID})
+    request = requests["Username"]
+    request.remove(data['username'])
+    await Requests.update_one({"UserID": UserID}, {"$set": {"Username": request}})
 
 
 '''
