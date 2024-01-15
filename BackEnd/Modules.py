@@ -123,8 +123,12 @@ FUNCTION TO FIND ALL THE REQUESTS BELONGING TO A USER
 '''
 async def Send_Pending_Requests(Manager, UserID):
     requests = await Requests.find_one({"UserID": UserID})
-    content_list = requests['Username']
+    if requests == None:
+        content_list = []
+    else:
+        content_list = requests['Username']
     content = {
+        "type": "pending requests",
         "Username": content_list
     }
     await Manager.Send_Message(UserID, json.dumps(content))
