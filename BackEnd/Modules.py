@@ -121,10 +121,13 @@ async def Session_Exists(UserID1, UserID2):
 '''
 FUNCTION TO FIND ALL THE REQUESTS BELONGING TO A USER
 '''
-async def Find_User_Requests(UserID):
+async def Send_Pending_Requests(Manager, UserID):
     requests = await Requests.find_one({"UserID": UserID})
-    content = requests['Username']
-    return content
+    content_list = requests['Username']
+    content = {
+        "Username": content_list
+    }
+    await Manager.Send_Message(UserID, json.dumps(content))
 '''
 FUNCTION TO SEE IF USER HAS ALREADY SENT A REQUEST TO THIS USER BEFORE
 '''
@@ -235,6 +238,7 @@ STORING IT AND SEND IT OUT TO ALL USERS IN THAT SESSION,
 INCLUDING THE CLIENT THAT SENT IT AS WELL
 '''
 async def Message_Handler(Manager, data, UserID:str):
+    user = await Users.find_one({"id": UserID})
     id = generate(size=12)
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     await Messages.insert_one({
@@ -242,10 +246,9 @@ async def Message_Handler(Manager, data, UserID:str):
         "SessionID": data['SessionID'],
         "Data": data['data'],
         "TimeStamp": time,
-        "SenderID": UserID
+        "SenderID": user["Username"]
     })
     Sesh = await Sessions.find_one({"SessionID": data["SessionID"]})
-    user = await Users.find_one({"id": UserID})
     Message = {
         "type": "message",
         "SessionID": data['SessionID'],
@@ -255,3 +258,16 @@ async def Message_Handler(Manager, data, UserID:str):
     }
     for user in Sesh['Users']:
         await Manager.Send_Message(user, message = json.dumps(Message))
+
+
+'''
+FUNCTION TO LOAD ALL SESSION MESSAGES ON CLICK OF SESSION BUTTON
+'''
+
+async def load_messages(Manager, UserID, SessionID):
+    messages = await Messages.find({"SessionID": SessionID}).sort({"TimeStamp": 1}).to_list(length=None)
+    reply = {
+        "SessionID":SessionID,
+        "Messages": [{"Data": message['Data'], "TimeStamp": message['TimeStamp'], "Sender": message["SenderID"]} for message in messages]
+    }
+    await Manager.Send_Message(UserID, json.dumps(reply))

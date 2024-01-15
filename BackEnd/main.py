@@ -55,11 +55,6 @@ async def Load_Details(UserID: str, token: str = None):
     content = await Load_User_Session_Details(UserID=UserID)
     return JSONResponse(content=content)
 
-@app.get('/Load_Requests/{UserID}')
-async def Load_Requests(UserID: str):
-    content = await Find_User_Requests(UserID)
-    return JSONResponse(content={"requests": content})
-
 Manager = Connection_Manager()
 
 @app.websocket("/connection/{UserID}")
@@ -76,6 +71,10 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
                 await Request_User(Manager=Manager, data=data, UserID=UserID)
             elif data['type'] == "message":
                 await Message_Handler(Manager=Manager, data=data, UserID=UserID)
+            elif data['type'] == "pending requests":
+                await Send_Pending_Requests(Manager=Manager, UserID=UserID)
+            elif data['type'] == "load messages":
+                await load_messages(Manager=Manager, UserID=UserID, SessionID=data['SessionID'])
                 
     except WebSocketDisconnect:
         print(f"Websocket Disconnect for User: {UserID}")
