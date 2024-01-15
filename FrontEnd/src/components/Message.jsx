@@ -75,6 +75,7 @@ const WebSocketExample = () => {
   };
 
   if (loading) return <p>Loading...</p>;
+
   return (
     <div>
       <div>
@@ -90,49 +91,57 @@ const WebSocketExample = () => {
         <button onClick={searchUser}>Search</button>
         <br />
         <br />
-        <p>{receivedMessage}</p>
-        <div>
-          {userExists && (
-            <>
-              <p>Would you like to accept the request?</p>
-              <button
-                onClick={() => {
-                  handleRes(1);
-                }}
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => {
-                  handleRes(0);
-                }}
-              >
-                No
-              </button>
-            </>
-          )}
-          <div>
+      </div>
+      <div>
+        {userExists && (
+          <div id="winston">
+            <p>{receivedMessage}</p>
+            <p>Would you like to accept the request?</p>
             <button
-              id="open"
               onClick={() => {
-                const scalingDiv = document.getElementById("scaling-div");
-                scalingDiv.style.display = "flex";
+                handleRes(1);
+                const winstonEl = document.getElementById("winston");
+                if (winstonEl) {
+                  winstonEl.parentNode.removeChild(winstonEl);
+                }
               }}
             >
-              Open
+              Yes
             </button>
-            <div id="scaling-div" style={{ display: "none" }}>
-              Hey mom
-              <button
-                id="close"
-                onClick={() => {
-                  const scalingDiv = document.getElementById("scaling-div");
-                  scalingDiv.style.display = "none";
-                }}
-              >
-                Close
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                handleRes(0);
+                const winstonEl = document.getElementById("winston");
+                if (winstonEl) {
+                  winstonEl.parentNode.removeChild(winstonEl);
+                }
+              }}
+            >
+              No
+            </button>
+          </div>
+        )}
+        <div>
+          <button
+            id="open"
+            onClick={() => {
+              const scalingDiv = document.getElementById("scaling-div");
+              scalingDiv.style.display = "flex";
+            }}
+          >
+            Open
+          </button>
+          <div id="scaling-div" style={{ display: "none" }}>
+            Hey mom
+            <button
+              id="close"
+              onClick={() => {
+                const scalingDiv = document.getElementById("scaling-div");
+                scalingDiv.style.display = "none";
+              }}
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
