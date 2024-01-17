@@ -77,13 +77,15 @@ def Verify_Password(Password, hashed_password):
 FUNCTION TO LOAD ALL THE CHATS AND SESSIONS THAT THE USER IS INVOLVED IN, INITIATED AT THE TIME OF LOGGING IN
 '''
 async def Load_User_Session_Details(UserID: str):
-    content = {}
+    content = { "type": "Sessions",
+        "Sessions": []}
     sessions = await Sessions.find({"Users": UserID}, {"SessionID": 1, "Users": 1}).to_list(length=None)
-    for session in sessions:
-        for user in session.get('Users', []):
-            if user != UserID:
-                user_details = await Users.find_one({"id": user}, {"Username": 1})
-                content[session['SessionID']] = {"Username": user_details["Username"]}
+    if sessions != None:
+        for session in sessions:
+            for user in session.get('Users', []):
+                if user != UserID:
+                    user_details = await Users.find_one({"id": user}, {"Username": 1})
+                    content["Sessions"].append({ "SessionID": session['SessionID'], "Username": user_details["Username"]})
     return content
 
 
@@ -98,8 +100,9 @@ class Connection_Manager:
         await websocket.accept()
         self.connections[UserID] = websocket
     async def Send_Message(self, UserID: str, message):
-        socket = self.connections[UserID]
-        await socket.send_text(message)
+        if UserID in self.connections:
+            socket = self.connections[UserID]
+            await socket.send_text(message)
     async def disconnect(self, UserID: str):
         del self.connections[UserID]
         result = await Users.update_one({"id": UserID}, {"$set":{"Status": "Offline"}})
@@ -194,7 +197,7 @@ AND REMOVES THE REQUEST FROM THE REQUESTS DATABASE
 async def Request_User(Manager, data, UserID: str):
     reciever = await search_user_by_username(data['username'])
     sender = await Users.find_one({'id': UserID})
-    if data["Accepted"] == "0":
+    if data["Accepted"] == 0:
         if reciever['Status'] == "Online":
             reply = {
                 "type": "Error",
@@ -216,17 +219,17 @@ async def Request_User(Manager, data, UserID: str):
             })
             sender_reply = {
                 "type": "Session",
-                "SessionID": id,
-                "Users": {
-                    reciever['id']: reciever['Username']
+                "Session": {
+                    "SessionID": id,
+                    "Username" : reciever['Username']
                 }
             }
             await Manager.Send_Message(sender['id'], message = json.dumps(sender_reply))
             reciever_reply = {
                 "type": "Session",
-                "SessionID": id,
-                "Users": {
-                    sender['id']: sender['Username']
+                "Session": {
+                    "SessionID": id,
+                    "Username" : sender['Username']
                 }
             }
             await Manager.Send_Message(reciever['id'], message = json.dumps(reciever_reply))
@@ -274,4 +277,12 @@ async def load_messages(Manager, UserID, SessionID):
         "SessionID":SessionID,
         "Messages": [{"Data": message['Data'], "TimeStamp": message['TimeStamp'], "Sender": message["SenderID"]} for message in messages]
     }
+    await Manager.Send_Message(UserID, json.dumps(reply))
+
+
+'''
+FUNCTION TO LOAD USER SESSION DETAILS
+'''
+async def load_sessions(Manager, UserID):
+    reply = Load_User_Session_Details(UserID=UserID)
     await Manager.Send_Message(UserID, json.dumps(reply))

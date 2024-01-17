@@ -48,7 +48,6 @@ async def login_user(user:User):
         else:
             return Response(status_code=401)#Password doesn't match
 
-
 @app.get('/Load_Details/{UserID}')
 async def Load_Details(UserID: str, token: str = None):
     validate_access_token(UserID=UserID, token=token)
@@ -73,6 +72,8 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
                 await Message_Handler(Manager=Manager, data=data, UserID=UserID)
             elif data['type'] == "pending requests":
                 await Send_Pending_Requests(Manager=Manager, UserID=UserID)
+            elif data['type'] == "load sessions":
+                await load_sessions(Manager=Manager, UserID=UserID)
             elif data['type'] == "load messages":
                 await load_messages(Manager=Manager, UserID=UserID, SessionID=data['SessionID'])
                 

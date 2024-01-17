@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import "../../styles/Message.css";
+import "../../../styles/Message.css";
 
-const Invite = ({ searchUser }) => {
+const Invite = ({ websocket }) => {
   const [message, setMessage] = useState("");
 
+  const searchUser = (message) => {
+    if (websocket && message.trim() !== "") {
+      websocket.send(JSON.stringify({ type: "search", username: message }));
+    }
+  };
+  
   return (
     <>
       <div>

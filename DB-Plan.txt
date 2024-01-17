@@ -172,3 +172,12 @@ if the user accepts the request:
                 "Winston's UserID": Winston
             }
         }
+
+		{
+                "type": "Session",
+                "Session": {
+                    "SessionID": id,
+                    "Username" : sender['Username']
+                }
+
+		{ "SessionID": session['SessionID'], "Username": user_details["Username"]}
