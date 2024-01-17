@@ -3,7 +3,7 @@ import axios from "axios";
 import Invite from "./components/Invite";
 import "../../styles/Message.css";
 import Requests from "./components/Requests";
-import Sessions from "./components/sessions";
+import Sessions from "./components/Sessions";
 
 const WebSocketExample = () => {
   const [websocket, setWebsocket] = useState(null);
@@ -17,7 +17,7 @@ const WebSocketExample = () => {
   useEffect(() => {
     try {
       const [, token] = jtoken.split("Bearer ");
-      
+
       axios
         .get(`http://localhost:8000/Load_Details/${UserId}?token=${token}`)
         .then((response) => {
@@ -41,9 +41,9 @@ const WebSocketExample = () => {
           alert(data["Details"]);
         } else if (data["type"] == "pending requests") {
           setRequests(data["Username"]);
-        } else if(data["type"] == "Session"){
+        } else if (data["type"] == "Session") {
           const prevlist = sessions;
-          setSessions(prevlist => prevlist.concat(data["Session"]));
+          setSessions((prevlist) => prevlist.concat(data["Session"]));
         }
       };
 

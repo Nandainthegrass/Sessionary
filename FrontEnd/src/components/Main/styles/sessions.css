@@ -1,0 +1,34 @@
+.Main{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    height: 90vh;
+}
+.grid-item{
+    border: 1px solid black;
+}
+.Search-and-Btn-Container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vw;
+}
+.search{
+    margin-top: 1vw;
+    padding: 1vw 2vw;
+}
+.messages{
+   grid-row: 1;
+}
+.Messaging-div{
+    display:grid;
+    grid-template-rows: 1fr auto;
+    height: 98%;
+}
+.search-txt{
+    padding: 1vw 2vw;
+    grid-row: 2;
+}
+#send-btn{
+    grid-row: 2;
+    width: max-content;
+}
