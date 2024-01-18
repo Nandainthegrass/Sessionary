@@ -4,24 +4,22 @@ const Sessions = ({ Data }) => {
   const sessions = Data[0];
   const Socket = Data[1];
 
+  const GetMessages = (SessionID) => {
+    localStorage.setItem("SessionID", SessionID);
+    if(Socket){
+      Socket.send(JSON.stringify({type: "load messages", SessionID: SessionID}));
+    }
+  }
+ 
   return (
-    <div className="Main">
       <div className="Search-and-Btn-Container grid-item">
-        <input type="text" placeholder="Search" class="search" />
+        <input type="text" placeholder="Search" className="search" />
         {sessions.map((session) => (
           <div className="Session-Button" key={session.SessionID}>
-            <button>{session.Username}</button>
+            <button onClick={()=>GetMessages(session.SessionID)}>{session.Username}</button>
           </div>
         ))}
       </div>
-      <div className="Messaging-div grid-item">
-        <div className="messages">hello</div>
-        <input type="text" placeholder="Send messages" className="search-txt" />
-        <button type="submit" id="send-btn">
-          Send
-        </button>
-      </div>
-    </div>
   );
 };
 

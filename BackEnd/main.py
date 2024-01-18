@@ -75,7 +75,7 @@ async def connection(UserID: str, websocket: WebSocket, token: str = None):
             elif data['type'] == "load sessions":
                 await load_sessions(Manager=Manager, UserID=UserID)
             elif data['type'] == "load messages":
-                await load_messages(Manager=Manager, UserID=UserID, SessionID=data['SessionID'])
+                await load_messages(Manager=Manager, UserID=UserID, SessionID=data["SessionID"])
                 
     except WebSocketDisconnect:
         print(f"Websocket Disconnect for User: {UserID}")

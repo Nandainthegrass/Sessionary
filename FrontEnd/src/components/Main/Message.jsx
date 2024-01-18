@@ -2,14 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Invite from "./components/Invite";
 import "../../styles/Message.css";
-import Requests from "./components/Requests";
-import Sessions from "./components/Sessions";
+import Requests from "./components/requests";
+import Sessions from "./components/sessions";
+import Sessionary_Messages from "./components/Sessionary_Messages";
+import "./styles/sessions.css";
 
 const WebSocketExample = () => {
   const [websocket, setWebsocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   const jtoken = localStorage.getItem("token");
   const UserId = localStorage.getItem("UserID");
@@ -44,6 +47,17 @@ const WebSocketExample = () => {
         } else if (data["type"] == "Session") {
           const prevlist = sessions;
           setSessions((prevlist) => prevlist.concat(data["Session"]));
+        } else if (data["type"] == "load messages") {
+          setMessages(data["Messages"]);
+          console.log(data["Messages"]);
+        } else if (data["type"] == "message") {
+          console.log(data["Message"]);
+          let SessionID = localStorage.getItem("SessionID");
+          if (data["SessionID"] == SessionID) {
+            const prevmessages = messages;
+            setMessages((prevmessages) => prevmessages.concat(data["Message"]));
+            console.log(messages);
+          }
         }
       };
 
@@ -73,7 +87,10 @@ const WebSocketExample = () => {
         </div>
         <div>{requests && <Requests Data={[requests, websocket]} />}</div>
       </nav>
-      <div>{sessions && <Sessions Data={[sessions, websocket]} />}</div>
+      <div className="Main">
+        {sessions && <Sessions Data={[sessions, websocket]} />}
+        {messages && <Sessionary_Messages Data={[messages, websocket]} />}
+      </div>
     </div>
   );
 };

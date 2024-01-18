@@ -259,9 +259,11 @@ async def Message_Handler(Manager, data, UserID:str):
     Message = {
         "type": "message",
         "SessionID": data['SessionID'],
-        "Data": data['data'],
-        'TimeStamp': time,
-        'SenderID': user['Username']
+        "Message":{
+            "Data": data['data'],
+            'TimeStamp': time,
+            'Sender': user['Username']
+        }
     }
     for user in Sesh['Users']:
         await Manager.Send_Message(user, message = json.dumps(Message))
@@ -273,10 +275,18 @@ FUNCTION TO LOAD ALL SESSION MESSAGES ON CLICK OF SESSION BUTTON
 
 async def load_messages(Manager, UserID, SessionID):
     messages = await Messages.find({"SessionID": SessionID}).sort({"TimeStamp": 1}).to_list(length=None)
-    reply = {
-        "SessionID":SessionID,
-        "Messages": [{"Data": message['Data'], "TimeStamp": message['TimeStamp'], "Sender": message["SenderID"]} for message in messages]
+    if messages is None:
+        reply = {
+        "type": "load messages",
+        "Session":SessionID,
+        "Messages": []
     }
+    else:
+        reply = {
+            "type": "load messages",
+            "SessionID":SessionID,
+            "Messages": [{"Data": message['Data'], "TimeStamp": message['TimeStamp'], "Sender": message["SenderID"]} for message in messages]
+        }
     await Manager.Send_Message(UserID, json.dumps(reply))
 
 
