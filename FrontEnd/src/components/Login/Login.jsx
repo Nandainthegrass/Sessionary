@@ -1,6 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../Layout/Layout";
+import Layout from "../../Layout/Layout";
+import "./Login.css";
+import { Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -46,29 +50,59 @@ function Login() {
   }
 
   return (
-    <div>
-      <h1>Login!</h1>
-      <form id="myForm" onSubmit={() => submitForm(event)}>
-        <input
-          type="text"
-          name="username"
-          autoComplete="username"
-          required
-        ></input>
-        <br />
-        <br />
-        <input
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          required
-        ></input>
-        <br />
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-      <p>{message}</p>
-    </div>
+    <Layout
+      navChildren={
+        <ul className="ulist">
+          <li className="listItem">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="listItem">
+            <Link to="/signup">Signup</Link>
+          </li>
+        </ul>
+      }
+      mainContentChildren={
+        <div className="login-content">
+          <div className="login-form">
+            <h1 style={{ color: "#123ea2", marginBottom: "1.5vh" }}>Login</h1>
+            <form id="myForm" onSubmit={() => submitForm(event)}>
+              <div>
+                <label htmlFor="username">Username: </label>
+                <input
+                  className="user-details"
+                  id="username"
+                  type="text"
+                  name="username"
+                  autoComplete="username"
+                  required
+                ></input>
+              </div>
+              <br />
+
+              <div>
+                <label htmlFor="password">Password: </label>
+                <input
+                  id="password"
+                  className="user-details"
+                  type="password"
+                  name="password"
+                  autoComplete="current-password"
+                  required
+                ></input>
+              </div>
+              <br />
+
+              <div>
+                <button className="btn" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+          <p>{message}</p>
+        </div>
+      }
+    />
   );
 }
 

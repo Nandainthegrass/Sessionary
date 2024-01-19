@@ -1,9 +1,8 @@
+
 @font-face {
   font-family: 'Pixel Perfect';
-  src: url('./FrontEnd/src/fonts/SHPinscher-Regular.otf') format('opentype');
+  src: url('../fonts/SHPinscher-Regular.otf') format('opentype');
 }
-
-
 
 body,html{
     width: 100%;
@@ -11,12 +10,15 @@ body,html{
     margin: 0;
     padding: 0;
     background-color: #b5ebeb;
+    justify-content: center;
+    align-items: center;
+    font-family: "Pixel Perfect";
 }
 
 .body-container{
     background-color:#00d4d5;
-    height: 98%;
-    width: 98%;
+    height: 97%;
+    width: 97%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -41,7 +43,7 @@ body,html{
 }
 
 .Title{
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Pixel Perfect', sans-serif;
     font-size: 4vh;
     color: whitesmoke;
     margin-left: 1.5vw;
@@ -61,32 +63,41 @@ body,html{
     height: 5vh;
     all: unset;
 }   
-
+.each-button:active{
+  transform: scale(1.05);
+}
 .each-image{
     width: 5vh;
     height: 5vh;
+}
+
+.nav-bar{
+    background-color: #00d4d5;
+    width: 98%;
+    height: 4vh;
+    display: flex;
+    font-size: 1.3vw;
+    align-items: center;
 }
 
 .inner-shadows{
     box-shadow: inset 8px 6px 2px #232883,
                 inset -4px -4px 0px #1f1d5c;
     background-color:  #92bdbc;
-    height: 85%;
+    display: flex;
+    height: 83%;
     width: 98%;
     justify-content: center;
     align-items: center;
 }
 .content{
-    margin-top: 0.35%;
-    margin-left: 0.35%;
+    margin-top: 0.5%;
+    margin-left: 1%;
+    margin-right: 0.3%;
+    margin-bottom: 0.35%;
     overflow-y: scroll;
     height: 98.7%;
-    width: 99.3%
-}
-.nav-bar{
-  background-color: #00d4d5;
-  width: 98%;
-  height: 4vh;
+    width: 98.7%;
 }
 /*Noice*/
 body *::-webkit-scrollbar {

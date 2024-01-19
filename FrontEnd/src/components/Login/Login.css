@@ -1,0 +1,70 @@
+.ulist{
+    all: unset;
+    display: flex;
+    list-style: none;
+    gap: 3vw;
+    margin-left: 1.5vw;
+}
+.listItem{
+    all: unset;
+    display: flex;
+    font-size: 1.4vw;
+}
+.login-content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color:#7a6ca5;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40%;
+    box-shadow: 6px 6px 2px #4f4471, -4px -4px 1px #beabfa;
+
+}
+h1{
+    margin: 0;
+    padding: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.login-form{
+    background-color: #A9A9A9;
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    margin-top: 4vh;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    box-shadow: inset 5px 5px 2px #42424d,
+                inset -4px -4px 2px #787789;
+}
+#myForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-details{
+    padding: 0.7vh 0.5vw;
+    box-shadow: inset -2px -2px 2px rgba(0,0,0,0.1);
+}
+input:focus{
+    outline: none;
+}
+.btn{
+    font-family: 'Pixel Perfect';
+    padding: 0.6vh 1.5vw;
+    background-color: #bdbdbd;
+    border: none;
+    box-shadow: 3px 3px 2px #212024,-1px -1px 1px #ffffff;
+}
+.btn:active{
+    transform: scale(0.97);
+}
+.btn:focus{
+    outline:none;
+}

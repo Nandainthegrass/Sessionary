@@ -1,6 +1,7 @@
 import React from "react";
 import "../../styles/Home.css";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../Layout/Layout";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,8 +12,8 @@ const Home = () => {
     navigate("/login");
   };
   return (
-    <>
-      <nav>
+    <Layout>
+      {/*<nav>
         <div className="empty">
           <p className="title">Sessionary</p>
         </div>
@@ -28,8 +29,8 @@ const Home = () => {
             Login
           </button>
         </div>
-      </nav>
-    </>
+  </nav>*/}
+    </Layout>
   );
 };
 
