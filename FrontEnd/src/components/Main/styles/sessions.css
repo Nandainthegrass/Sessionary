@@ -23,6 +23,7 @@
     display:grid;
     grid-template-rows: 1fr auto;
     height: 98%;
+    overflow-y: scroll;
 }
 .search-txt{
     padding: 1vw 2vw;

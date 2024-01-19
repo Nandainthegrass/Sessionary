@@ -1,13 +1,19 @@
 import "../styles/sessions.css";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect} from "react";
 
 const Sessionary_Messages = ({ Data }) => {
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState([]);
-
+  const containerRef = useRef(null);
   useEffect(() => {
     setMessages(Data[0]);
   }, [Data]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const Socket = Data[1];
 
@@ -25,16 +31,17 @@ const Sessionary_Messages = ({ Data }) => {
   };
 
   return (
-    <div className="Messaging-div grid-item">
+    <>
+    <div ref={containerRef} className="Messaging-div grid-item">
       <div className="messages">
         {messages.map((message) => (
           <div key={message.TimeStamp}>
-            <label>{message.Sender}: {message.Data}</label>
+            <p>{message.Sender}: {message.Data}</p>
             <br></br>
           </div>
         ))}
       </div>
-      <input
+      {localStorage.getItem("SessionID")&& <div><input
         type="text"
         placeholder="Send messages"
         value={data}
@@ -43,8 +50,10 @@ const Sessionary_Messages = ({ Data }) => {
       />
       <button type="submit" id="send-btn" onClick={() => Send_Message(data)}>
         Send
-      </button>
+      </button></div>}
     </div>
+    
+    </>
   );
 };
 
