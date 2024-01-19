@@ -15,14 +15,54 @@ body,html{
     left: 50%;
     transform: translate(-50%,-50%);
     display: flex;
+    flex-direction: column;
+    gap: 1vh;
     justify-content: center;
     align-items: center;
     box-shadow: 6px 6px 2px #00787d, -4px -4px 1px #fff;
 }
+
+.Title-Bar{
+    background-color: #771ed0;
+    width: 98%;
+    height: 6vh;  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: inset 8px 6px 2px #232883,
+                inset -4px -4px 0px #1f1d5c;
+}
+
+.Title{
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 4vh;
+    color: whitesmoke;
+    margin-left: 1.5vw;
+    
+}
+.Window-Buttons{
+    margin-right: 0.4vw;
+    display: flex;
+    gap: 0.15vw;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.8vh;
+}
+
+.each-button{
+    width: 5vh;
+    height: 5vh;
+    all: unset;
+}   
+
+.each-image{
+    width: 5vh;
+    height: 5vh;
+}
 .content{
-    box-shadow: inset 6px 4px 2px #232883;
-    background-color: #781bce;
+    box-shadow: inset 8px 6px 2px #232883,
+                inset -4px -4px 0px #1f1d5c;
+    background-color:  #92bdbc;
     height: 90%;
     width: 98%;
-    margin-top: 6vh;
 }
