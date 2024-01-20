@@ -33,3 +33,12 @@
     grid-row: 2;
     width: max-content;
 }
+
+.notif{
+    background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+}

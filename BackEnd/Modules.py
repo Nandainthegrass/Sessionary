@@ -221,7 +221,8 @@ async def Request_User(Manager, data, UserID: str):
                 "type": "Session",
                 "Session": {
                     "SessionID": id,
-                    "Username" : reciever['Username']
+                    "Username" : reciever['Username'],
+                    "color" : "None"
                 }
             }
             await Manager.Send_Message(sender['id'], message = json.dumps(sender_reply))
@@ -229,7 +230,8 @@ async def Request_User(Manager, data, UserID: str):
                 "type": "Session",
                 "Session": {
                     "SessionID": id,
-                    "Username" : sender['Username']
+                    "Username" : sender['Username'],
+                    "Color": "None"
                 }
             }
             await Manager.Send_Message(reciever['id'], message = json.dumps(reciever_reply))

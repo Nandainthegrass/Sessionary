@@ -46,7 +46,7 @@ const WebSocketExample = () => {
           setRequests(data["Username"]);
         } else if (data["type"] == "Session") {
           const prevlist = sessions;
-          setSessions((prevlist) => prevlist.concat(data["Session"]));
+          setSessions((prevlist) => [data["Session"], ...prevlist]);
         } else if (data["type"] == "load messages") {
           setMessages(data["Messages"]);
           console.log(data["Messages"]);
@@ -57,6 +57,14 @@ const WebSocketExample = () => {
             const prevmessages = messages;
             setMessages((prevmessages) => prevmessages.concat(data["Message"]));
             console.log(messages);
+          } else {
+            setSessions(prevList => 
+              prevList.map(session => 
+                session.SessionID === data["SessionID"]
+                  ? { ...session, Color: "True" }
+                  : session
+              )
+            );            
           }
         }
       };
@@ -73,7 +81,28 @@ const WebSocketExample = () => {
     }
   }, []);
   // Empty dependency array ensures the effect runs only once on mount
+  const update_sessions = (Value) => {
+    const updatedList = [...sessions];
+    const indexToRemove = updatedList.findIndex(
+      (sesh) => sesh.SessionID === Value
+    );
 
+    if (indexToRemove !== -1) {
+      const removedSesh = updatedList.splice(indexToRemove, 1)[0];
+      updatedList.unshift(removedSesh);
+      setSessions(updatedList);
+    }
+  };
+
+  const update_notif = () => {
+    setSessions(prevList => 
+      prevList.map(session => 
+        session.SessionID === localStorage.getItem("SessionID")
+          ? { ...session, Color: "None" }
+          : session
+      )
+    );            
+  }
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -88,8 +117,10 @@ const WebSocketExample = () => {
         <div>{requests && <Requests Data={[requests, websocket]} />}</div>
       </nav>
       <div className="Main">
-        {sessions && <Sessions Data={[sessions, websocket]} />}
-        {messages && <Sessionary_Messages Data={[messages, websocket]} />}
+        {sessions && <Sessions Data={[sessions, websocket, update_notif]} />}
+        {messages && (
+          <Sessionary_Messages Data={[messages, websocket, update_sessions]} />
+        )}
       </div>
     </div>
   );

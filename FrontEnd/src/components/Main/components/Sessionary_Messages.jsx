@@ -16,6 +16,7 @@ const Sessionary_Messages = ({ Data }) => {
   }, [messages]);
 
   const Socket = Data[1];
+  const update_sessions = Data[2];
 
   const Send_Message = (data) => {
     if (Socket) {
@@ -28,6 +29,7 @@ const Sessionary_Messages = ({ Data }) => {
       );
     }
     setData("");
+    update_sessions(localStorage.getItem("SessionID"));
   };
 
   return (
