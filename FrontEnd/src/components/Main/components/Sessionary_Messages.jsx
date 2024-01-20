@@ -49,13 +49,14 @@ const Sessionary_Messages = ({ Data }) => {
         </div>
         <div className="send-msg">
           {localStorage.getItem("SessionID") && (
-            <div>
+            <div className="text-and-btn">
               <textarea
                 placeholder="Send messages"
                 value={data}
                 className="search-txt"
                 onChange={(e) => setData(e.target.value)}
               />
+
               <button
                 type="submit"
                 id="send-btn"

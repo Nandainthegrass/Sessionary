@@ -74,7 +74,7 @@ body,html{
     height: 4vh;
     display: flex;
     font-size: 1.3vw;
-    align-items: center;
+    color: rgb(6, 203, 6);
 }
 
 .inner-shadows{

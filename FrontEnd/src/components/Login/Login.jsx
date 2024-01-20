@@ -5,10 +5,11 @@ import "../../Layout/Layout";
 import Layout from "../../Layout/Layout";
 import "./Login.css";
 import { Link } from "react-router-dom";
+import Alert from "../../Layout/Alert";
 
 function Login() {
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState("");
   async function submitForm(event) {
     event.preventDefault(); //stops default behaviour
     let formData = new FormData(document.getElementById("myForm"));
@@ -35,18 +36,21 @@ function Login() {
         localStorage.setItem("UserID", UserID);
         localStorage.setItem("token", authorizationHeader);
         navigate("/message");
-        setMessage("Login Successful! Redirect user to a different page");
+        setAlert("Login Successful! Redirect user to a different page");
       } else if (response.status == 400) {
-        setMessage("User Doesn't Exist!");
+        setAlert("User Doesn't Exist!");
       } else if (response.status == 401) {
-        setMessage("Password doesn't match!");
+        setAlert("Password doesn't match!");
       } else {
-        setMessage("Submission failed. Try again.");
+        setAlert("Submission failed. Try again.");
         console.error("Form submission failed");
       }
     } catch (error) {
       console.error("An error occurred during form submission", error);
     }
+  }
+  function handleClose() {
+    setAlert("");
   }
 
   return (
@@ -62,45 +66,47 @@ function Login() {
         </ul>
       }
       mainContentChildren={
-        <div className="login-content">
-          <div className="login-form">
-            <h1 style={{ color: "#123ea2", marginBottom: "1.5vh" }}>Login</h1>
-            <form id="myForm" onSubmit={() => submitForm(event)}>
-              <div>
-                <label htmlFor="username">Username: </label>
-                <input
-                  className="user-details"
-                  id="username"
-                  type="text"
-                  name="username"
-                  autoComplete="username"
-                  required
-                ></input>
-              </div>
-              <br />
+        <>
+          <div className="login-content">
+            <div className="login-form">
+              <h1 style={{ color: "#123ea2", marginBottom: "1.5vh" }}>Login</h1>
+              <form id="myForm" onSubmit={() => submitForm(event)}>
+                <div>
+                  <label htmlFor="username">Username: </label>
+                  <input
+                    className="user-details"
+                    id="username"
+                    type="text"
+                    name="username"
+                    autoComplete="username"
+                    required
+                  ></input>
+                </div>
+                <br />
 
-              <div>
-                <label htmlFor="password">Password: </label>
-                <input
-                  id="password"
-                  className="user-details"
-                  type="password"
-                  name="password"
-                  autoComplete="current-password"
-                  required
-                ></input>
-              </div>
-              <br />
+                <div>
+                  <label htmlFor="password">Password: </label>
+                  <input
+                    id="password"
+                    className="user-details"
+                    type="password"
+                    name="password"
+                    autoComplete="current-password"
+                    required
+                  ></input>
+                </div>
+                <br />
 
-              <div>
-                <button className="btn" type="submit">
-                  Submit
-                </button>
-              </div>
-            </form>
+                <div>
+                  <button className="btn" type="submit">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <p>{message}</p>
-        </div>
+          {alert && <Alert details={alert} onHandleClose={handleClose} />}
+        </>
       }
     />
   );
