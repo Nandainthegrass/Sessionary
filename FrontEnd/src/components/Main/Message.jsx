@@ -6,6 +6,7 @@ import Requests from "./components/requests";
 import Sessions from "./components/sessions";
 import Sessionary_Messages from "./components/Sessionary_Messages";
 import "./styles/sessions.css";
+import Layout from "../../Layout/Layout";
 
 const WebSocketExample = () => {
   const [websocket, setWebsocket] = useState(null);
@@ -106,23 +107,27 @@ const WebSocketExample = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
-      <nav>
-        <div className="empty">
-          <p className="title">LOGO</p>
-        </div>
-        <div>
-          <Invite websocket={websocket} />
-        </div>
-        <div>{requests && <Requests Data={[requests, websocket]} />}</div>
-      </nav>
-      <div className="Main">
-        {sessions && <Sessions Data={[sessions, websocket, update_notif]} />}
-        {messages && (
+    <Layout
+      navChildren={
+        <nav>
+          <div className="">
+            <p className="">LOGO</p>
+          </div>
+          <div>
+            <Invite websocket={websocket} />
+          </div>
+          <div>{requests && <Requests Data={[requests, websocket]} />}</div>
+        </nav>
+      }
+      mainContentChildren={
+        <div className="Main">
+          {sessions && <Sessions Data={[sessions, websocket, update_notif]} />}
+          {messages && (
           <Sessionary_Messages Data={[messages, websocket, update_sessions]} />
         )}
-      </div>
-    </div>
+        </div>
+      }
+    />
   );
 };
 
