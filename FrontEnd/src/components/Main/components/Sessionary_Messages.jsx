@@ -34,19 +34,17 @@ const Sessionary_Messages = ({ Data }) => {
 
   return (
     <>
-      <div ref={containerRef} className="Messaging-div grid-item">
-        <div className="messages">
-          <div className="lastHope">
+      <div className="Messaging-div grid-item">
+        <div ref={containerRef} className="messages">
             {messages.map((message) => (
               <div key={message.TimeStamp}>
                 <p>
-                  {message.Sender}: {message.Data}
+                  {message.Sender} &gt;&gt;{message.Data}
                 </p>
                 <br></br>
               </div>
             ))}
           </div>
-        </div>
         <div className="send-msg">
           {localStorage.getItem("SessionID") && (
             <div>

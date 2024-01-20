@@ -5,24 +5,24 @@ import src3 from "./icons/Close_Window_icon.ico";
 
 const Layout = ({ mainContentChildren, navChildren }) => {
   return (
-    <div style={{ fontFamily: "Pixel Perfect" }} class="body-container">
-      <div class="Title-Bar">
-        <div class="Title">Sessionary</div>
-        <div class="Window-Buttons">
-          <button class="each-button">
-            <img src={src1} class="each-image" />
+    <div style={{ fontFamily: "Pixel Perfect" }} className="body-container">
+      <div className="Title-Bar">
+        <div className="Title">Sessionary</div>
+        <div className="Window-Buttons">
+          <button className="each-button">
+            <img src={src1} className="each-image" />
           </button>
-          <button class="each-button">
-            <img src={src2} class="each-image" />
+          <button className="each-button">
+            <img src={src2} className="each-image" />
           </button>
-          <button class="each-button">
-            <img src={src3} class="each-image" />
+          <button className="each-button">
+            <img src={src3} className="each-image" />
           </button>
         </div>
       </div>
       <div className="nav-bar">{navChildren}</div>
-      <div class="inner-shadows">
-        <div class="content">{mainContentChildren}</div>
+      <div className="inner-shadows">
+        <div className="content">{mainContentChildren}</div>
       </div>
     </div>
   );
