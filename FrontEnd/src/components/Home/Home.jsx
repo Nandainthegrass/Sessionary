@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/Home.css";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout/Layout";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,25 +13,19 @@ const Home = () => {
     navigate("/login");
   };
   return (
-    <Layout>
-      {/*<nav>
-        <div className="empty">
-          <p className="title">Sessionary</p>
-        </div>
-        <ul className="u-list">
-          <li href="#">About</li>
-          <li href="#">Contact</li>
+    <Layout
+      navChildren={
+        <ul className="ulist">
+          <li className="listItem">
+            <Link to="/signup">Signup</Link>
+          </li>
+          <li className="listItem">
+            <Link to="/login">Login</Link>
+          </li>
         </ul>
-        <div>
-          <button className="login-btn" onClick={handleSignUp}>
-            Sign up
-          </button>
-          <button className="login-btn" onClick={handleLogin}>
-            Login
-          </button>
-        </div>
-  </nav>*/}
-    </Layout>
+      }
+      mainContentChildren={<></>}
+    />
   );
 };
 
