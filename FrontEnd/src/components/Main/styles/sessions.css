@@ -50,20 +50,57 @@
     overflow-y: auto;
     height: 72vh;
     margin-left: 2vw;
-    border-bottom: 1px solid black;
-    display: grid; 
+    display: flex;
+    flex-direction: column; 
     color: rgb(6, 203, 6);
-    font-size: 1.5vw;
+    font-size: 1.8vw;
  }
- 
+ .each-msg{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+ }
+ .msg-sender{
+    grid-column: 1;
+ }
+ .msg-data{
+    grid-column:2;
+ }
+ .msg-time{
+    grid-column: 3;
+ }
 .search-txt{
-    padding: 1vw 2vw;
+    padding: 0.6vw;
+    min-height: 2vh;
+    border-radius: 1vw;
+    width: 80%;
+    background-color: #080029;
+    color:aliceblue;
+    resize: none;
+}
+.search-txt:focus{
+    outline: none;
+    border: 1px solid white;
 }
 .send-msg{
     grid-row: 2;
 }
+.text-and-btn{
+    display: flex;
+    justify-content: center;
+    gap: 0.5vw;
+}
 #send-btn{
     width: max-content;
+    border-radius: 1vw;
+    background-color: #080029;
+    border:1px solid gray;
+    color: gray;
+    transition: color 0.3s;
+}
+#send-btn:hover{
+    border:1px solid white;
+    color: white;
+
 }
 
 .Session-Button{

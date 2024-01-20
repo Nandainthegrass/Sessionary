@@ -36,25 +36,30 @@ const Sessionary_Messages = ({ Data }) => {
     <>
       <div className="Messaging-div grid-item">
         <div ref={containerRef} className="messages">
-            {messages.map((message) => (
-              <div key={message.TimeStamp}>
-                <p>
-                  {message.Sender} &gt;&gt;{message.Data}
-                </p>
-                <br></br>
-              </div>
-            ))}
-          </div>
+          {messages.map((message, idx) => (
+            <div
+              style={{ height: "max-content", whiteSpace: "pre-wrap" }}
+              key={idx}
+            >
+              <p style={{ margin: 0 }} className="each-msg">
+                <span className="msg-sender">{message.Sender} &gt;&gt; </span>
+                <span className="msg-data">{message.Data}</span>
+                <span className="msg-time">{message.TimeStamp}</span>
+              </p>
+              <br></br>
+            </div>
+          ))}
+        </div>
         <div className="send-msg">
           {localStorage.getItem("SessionID") && (
-            <div>
-              <input
-                type="text"
+            <div className="text-and-btn">
+              <textarea
                 placeholder="Send messages"
                 value={data}
                 className="search-txt"
                 onChange={(e) => setData(e.target.value)}
               />
+
               <button
                 type="submit"
                 id="send-btn"
