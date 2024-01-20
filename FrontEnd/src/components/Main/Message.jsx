@@ -49,6 +49,7 @@ const WebSocketExample = () => {
           const prevlist = sessions;
           setSessions((prevlist) => [data["Session"], ...prevlist]);
         } else if (data["type"] == "load messages") {
+          console.log(data["Messages"])
           setMessages(data["Messages"]);
           console.log(data["Messages"]);
         } else if (data["type"] == "message") {

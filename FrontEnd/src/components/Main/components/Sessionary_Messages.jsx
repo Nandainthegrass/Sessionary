@@ -19,37 +19,38 @@ const Sessionary_Messages = ({ Data }) => {
   const update_sessions = Data[2];
 
   const Send_Message = (data) => {
-    if (Socket) {
-      Socket.send(
-        JSON.stringify({
-          type: "message",
-          data: data,
-          SessionID: localStorage.getItem("SessionID"),
-        })
-      );
+    if (data != "") {
+      if (Socket) {
+        Socket.send(
+          JSON.stringify({
+            type: "message",
+            data: data,
+            SessionID: localStorage.getItem("SessionID"),
+          })
+        );
+      }
+      update_sessions(localStorage.getItem("SessionID"));
     }
     setData("");
-    update_sessions(localStorage.getItem("SessionID"));
   };
 
   return (
     <>
       <div className="Messaging-div grid-item">
         <div ref={containerRef} className="messages">
-            {messages.map((message) => (
-              <div key={message.TimeStamp}>
-                <p>
-                  {message.Sender} &gt;&gt;{message.Data}
-                </p>
-                <br></br>
-              </div>
-            ))}
-          </div>
+          {messages.map((message, idx) => (
+            <div key={idx} className="each-message">
+              <div className="message-sender">{message.Sender}&gt;&gt;</div>
+              <div className="message-data">{message.Data}</div>
+              <div className="message-timestamp">{message.TimeStamp}</div>
+              <br></br>
+            </div>
+          ))}
+        </div>
         <div className="send-msg">
           {localStorage.getItem("SessionID") && (
             <div>
-              <input
-                type="text"
+              <textarea
                 placeholder="Send messages"
                 value={data}
                 className="search-txt"
@@ -58,7 +59,7 @@ const Sessionary_Messages = ({ Data }) => {
               <button
                 type="submit"
                 id="send-btn"
-                onClick={() => Send_Message(data)}
+                onClick={() => Send_Message(data.trim())}
               >
                 Send
               </button>

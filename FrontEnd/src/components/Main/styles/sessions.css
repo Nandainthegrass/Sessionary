@@ -51,7 +51,9 @@
     height: 72vh;
     margin-left: 2vw;
     border-bottom: 1px solid black;
-    display: grid; 
+    display: flex;
+    flex-direction: column;
+    align-items: start;
     color: rgb(6, 203, 6);
     font-size: 1.5vw;
  }
@@ -132,4 +134,32 @@
     width: auto;
     height: auto;
     grid-column: 2;
+}
+
+.each-message{
+    height: auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+}
+
+.message-sender{
+    white-space: pre-line;
+    grid-column: 1;
+    display: flex;
+    align-items: start;
+}
+
+.message-data{
+    white-space: pre-wrap;
+    grid-column: 2;
+    display: flex;
+    align-items: start;
+    margin-left: 2vw;
+}
+
+.message-timestamp{
+    grid-column: 3;
+    display: flex;
+    align-items: end;
 }
