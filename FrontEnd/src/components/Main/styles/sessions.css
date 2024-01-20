@@ -1,7 +1,7 @@
 .Main{
     display: grid;
     grid-template-columns: 1fr 4fr;
-    height: 90vh;
+    height: 100%;
 }
 .grid-item{
     border: 1px solid black;
@@ -16,20 +16,25 @@
     margin-top: 1vw;
     padding: 1vw 2vw;
 }
-.messages{
-   grid-row: 1;
-}
+
 .Messaging-div{
     display:grid;
     grid-template-rows: 1fr auto;
-    height: 98%;
-    overflow-y: scroll;
 }
+.messages{
+    grid-row: 1;
+    overflow-y: scroll;
+    height: 72vh;
+    border-bottom: 1px solid black;
+    display: grid; 
+ }
+ 
 .search-txt{
     padding: 1vw 2vw;
+}
+.send-msg{
     grid-row: 2;
 }
 #send-btn{
-    grid-row: 2;
     width: max-content;
 }

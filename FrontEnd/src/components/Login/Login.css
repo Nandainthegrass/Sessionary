@@ -50,6 +50,8 @@ h1{
 
 .user-details{
     padding: 0.7vh 0.5vw;
+    width: 17vw;
+    height: 2vh;
     box-shadow: inset -2px -2px 2px rgba(0,0,0,0.1);
 }
 input:focus{
@@ -58,6 +60,8 @@ input:focus{
 .btn{
     font-family: 'Pixel Perfect';
     padding: 0.6vh 1.5vw;
+    width: 8vw;
+    height: 4vh;
     background-color: #bdbdbd;
     border: none;
     box-shadow: 3px 3px 2px #212024,-1px -1px 1px #ffffff;
