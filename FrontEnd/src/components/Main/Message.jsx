@@ -8,7 +8,7 @@ import Sessionary_Messages from "./components/Sessionary_Messages";
 import "./styles/sessions.css";
 import Layout from "../../Layout/Layout";
 import Alert from "../../Layout/Alert";
-import profile from "./components/Session_Images/Profile.png"
+import profile from "./components/Session_Images/Profile.png";
 
 const WebSocketExample = () => {
   const [websocket, setWebsocket] = useState(null);
@@ -53,7 +53,7 @@ const WebSocketExample = () => {
           const prevlist = sessions;
           setSessions((prevlist) => [data["Session"], ...prevlist]);
         } else if (data["type"] == "load messages") {
-          console.log(data["Messages"])
+          console.log(data["Messages"]);
           setMessages(data["Messages"]);
           console.log(data["Messages"]);
         } else if (data["type"] == "message") {
@@ -122,12 +122,18 @@ const WebSocketExample = () => {
           <div className="username-logout">
             <div className="profile-pics">
               <img className="profiles" src={profile} alt="Profile" />
-            </div>{Username}
+            </div>
+            {Username}
           </div>
           <div className="invite-friend">
-            <Invite websocket={websocket} /><div className="requests-btn">{requests && <Requests Data={[requests, websocket]} />}</div>
+            <Invite websocket={websocket} />
           </div>
-          <div className="requests-btn">Logout</div>
+          <div className="request-logout-btn">
+            <div className="requests-btn">
+              {requests && <Requests Data={[requests, websocket]} />}
+            </div>
+            <button className="logout-btn">Logout</button>
+          </div>
         </div>
       }
       mainContentChildren={

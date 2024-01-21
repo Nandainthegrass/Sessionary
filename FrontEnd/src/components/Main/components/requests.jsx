@@ -18,8 +18,10 @@ const Requests = ({ Data }) => {
   };
 
   const Handle_Div = () => {
-    setDivState(!divState);
     loadRequest();
+    if (Usernames.length != 0){
+    setDivState(!divState);
+    }
   };
 
   const replyRequest = (Username, response) => {
@@ -39,25 +41,25 @@ const Requests = ({ Data }) => {
 
   return (
     <>
-      <div className="request-button">
-        <button onClick={() => Handle_Div()}>Requests</button>
-      </div>
+      <button className="request-button" onClick={() => Handle_Div()}>
+        &#9993;
+      </button>
       {divState && (
         <div className="Request-Div">
           {Usernames.map((Username) => (
             <div className="Each-Request" key={Username}>
               <label className="Usernames">{Username}</label>
               <button
-                className="Reply"
+                className="Reply-yes"
                 onClick={() => replyRequest(Username, 1)}
               >
-                Yes
+                &#10004;
               </button>
               <button
-                className="Reply"
+                className="Reply-no"
                 onClick={() => replyRequest(Username, 0)}
               >
-                No
+                &#10006;
               </button>
             </div>
           ))}
