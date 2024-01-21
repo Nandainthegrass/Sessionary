@@ -48,10 +48,19 @@ function Signup() {
       navChildren={
         <ul className="ulist">
           <li className="listItem">
-            <Link to="/">Home</Link>
+            <button
+              className="route-btn"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Home
+            </button>
           </li>
           <li className="listItem">
-            <Link to="/login">Login</Link>
+            <button className="route-btn" onClick={() => navigate("/login")}>
+              Login
+            </button>
           </li>
         </ul>
       }
@@ -59,12 +68,12 @@ function Signup() {
         <>
           <div className="login-content">
             <div className="login-form">
-              <h1 style={{ color: "#123ea2", marginBottom: "1.5vh" }}>
-                Sign up!
-              </h1>
+              <h1 className="login-txt">Sign up!</h1>
               <form id="myForm" onSubmit={() => submitForm(event)}>
                 <div>
-                  <label htmlFor="username">Username: </label>
+                  <label className="label-txt" htmlFor="username">
+                    Username:{" "}
+                  </label>
                   <input
                     type="text"
                     name="username"
@@ -75,7 +84,9 @@ function Signup() {
                 </div>
                 <br />
                 <div>
-                  <label htmlFor="password">Password: </label>
+                  <label className="label-txt" htmlFor="password">
+                    Password:{" "}
+                  </label>
                   <input
                     type="password"
                     name="password"

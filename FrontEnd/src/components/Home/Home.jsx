@@ -17,10 +17,19 @@ const Home = () => {
       navChildren={
         <ul className="ulist">
           <li className="listItem">
-            <Link to="/signup">Signup</Link>
+            <button
+              className="route-btn"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Signup
+            </button>
           </li>
           <li className="listItem">
-            <Link to="/login">Login</Link>
+            <button className="route-btn" onClick={() => navigate("/login")}>
+              Login
+            </button>
           </li>
         </ul>
       }

@@ -4,25 +4,35 @@
     list-style: none;
     gap: 3vw;
     margin-left: 1.5vw;
+
 }
 .listItem{
     all: unset;
     display: flex;
     font-size: 1.4vw;
+    color: whitesmoke;
+    text-decoration: 'none';
+}
+.listItem:visited{
+    color: #ffffff;
 }
 .login-content{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    background-color:#7a6ca5;
+    background-color:#013459;
     width: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 40%;
-    box-shadow: 6px 6px 2px #4f4471, -4px -4px 1px #beabfa;
+    box-shadow: 4px 4px 2px #012b47, -4px -4px 2px #085c98;
 
+}
+.login-txt{
+    margin-bottom: 1.5vh;
+    color: whitesmoke;
 }
 h1{
     margin: 0;
@@ -30,7 +40,7 @@ h1{
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 .login-form{
-    background-color: #A9A9A9;
+    background-color: #080029;
     display: flex;
     flex-direction: column;
     width: 95%;
@@ -41,6 +51,9 @@ h1{
     box-shadow: inset 5px 5px 2px #42424d,
                 inset -4px -4px 2px #787789;
 }
+.label-txt{
+    color: whitesmoke;
+}
 #myForm{
     display: flex;
     flex-direction: column;
@@ -48,6 +61,16 @@ h1{
     align-items: center;
 }
 
+.route-btn{
+    background: none;
+    border: none;
+    color: whitesmoke;
+    transition: color 0.2s ease-in-out;
+}
+.route-btn:hover{
+    color: rgb(6, 203, 6);
+    cursor: pointer;
+}
 .user-details{
     padding: 0.7vh 0.5vw;
     width: 17vw;

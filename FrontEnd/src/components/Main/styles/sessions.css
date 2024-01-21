@@ -48,9 +48,8 @@
 .messages{
     grid-row: 1;
     overflow-y: auto;
-    height: 72vh;
+    height: 70vh;
     margin-left: 2vw;
-    border-bottom: 1px solid black;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -61,16 +60,23 @@
 .search-txt{
     padding: 0.6vw;
     border: none;
-    border-bottom: 2px solid whitesmoke;
+    font-size: 1.3vw;
+    border-top: 1px solid whitesmoke;
+    
     width: 40vw;
     background-color: #080029;
     color:aliceblue;
     resize: none;
     outline: none;
+    place-self: center;
+}
+.search-txt::placeholder{
+    font-size: 1.3vw;
 }
 .send-msg{
     grid-row: 2;
     display: flex;
+    margin-bottom: 1vh;
 }
 .text-and-btn{
     display: flex;
@@ -78,18 +84,24 @@
     gap: 0.5vw;
 }
 #send-btn{
-    width: max-content;
     border-radius: 1vw;
     background-color: #080029;
-    border:1px solid gray;
+    border:2px solid gray;
     color: gray;
-    transition: color 0.3s;
+    transition: color 0.3s ease-in-out;
+    height: 6vh;
+    place-self: top;
+    width: 3vw;
 }
 #send-btn:hover{
-    border:1px solid white;
+    border:2px solid white;
     color: white;
-
 }
+#send-btn:active{
+    border: 2px solid rgb(6, 203, 6);
+    color: rgb(6, 203, 6);
+}
+
 
 .Session-Button{
     width: 95%;
@@ -142,7 +154,7 @@
     align-items: start;
     display: flex;
     margin-left: 1vw;
-    font-size: 1.2vw;
+    font-size: 1.4vw;
 }
 
 .noti-image{
@@ -189,6 +201,12 @@
 
 .greater{
     margin-left: 2vw;
-    font-size: 1.5vw;
+    font-size: 1.8vw;
     color: rgb(6, 203, 6);
+    animation: blink 0.8s infinite;
 }
+@keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
