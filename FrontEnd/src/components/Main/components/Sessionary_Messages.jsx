@@ -34,6 +34,13 @@ const Sessionary_Messages = ({ Data }) => {
     setData("");
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      Send_Message(data);
+    }
+  };
+
   return (
     <>
       <div className="Messaging-div grid-item">
@@ -48,13 +55,17 @@ const Sessionary_Messages = ({ Data }) => {
           ))}
         </div>
         <div className="send-msg">
+          <div className="greater">
+          &gt;</div>
           {localStorage.getItem("SessionID") && (
             <div className="text-and-btn">
               <textarea
                 placeholder="Send messages"
                 value={data}
                 className="search-txt"
+                id="send-txt"
                 onChange={(e) => setData(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
 
               <button
@@ -68,6 +79,7 @@ const Sessionary_Messages = ({ Data }) => {
           )}
         </div>
       </div>
+      
     </>
   );
 };
