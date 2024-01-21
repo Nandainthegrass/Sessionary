@@ -34,6 +34,7 @@ function Login() {
         let authorizationHeader = response.headers.get("Authorization");
         console.log(`Authorization Header: ${authorizationHeader}`);
         localStorage.setItem("UserID", UserID);
+        localStorage.setItem("Username", Username);
         localStorage.setItem("token", authorizationHeader);
         navigate("/message");
         setAlert("Login Successful! Redirect user to a different page");

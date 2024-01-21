@@ -38,8 +38,8 @@ const Requests = ({ Data }) => {
   };
 
   return (
-    <div>
-      <div className="Request-Button">
+    <>
+      <div className="request-button">
         <button onClick={() => Handle_Div()}>Requests</button>
       </div>
       {divState && (
@@ -63,7 +63,7 @@ const Requests = ({ Data }) => {
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 };
 

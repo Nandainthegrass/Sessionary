@@ -8,6 +8,7 @@ import Sessionary_Messages from "./components/Sessionary_Messages";
 import "./styles/sessions.css";
 import Layout from "../../Layout/Layout";
 import Alert from "../../Layout/Alert";
+import profile from "./components/Session_Images/Profile.png"
 
 const WebSocketExample = () => {
   const [websocket, setWebsocket] = useState(null);
@@ -19,6 +20,7 @@ const WebSocketExample = () => {
 
   const jtoken = localStorage.getItem("token");
   const UserId = localStorage.getItem("UserID");
+  const Username = localStorage.getItem("Username");
 
   useEffect(() => {
     try {
@@ -116,15 +118,17 @@ const WebSocketExample = () => {
   return (
     <Layout
       navChildren={
-        <nav>
-          <div className="">
-            <p className="">LOGO</p>
+        <div className="message-nav-bar">
+          <div className="username-logout">
+            <div className="profile-pics">
+              <img className="profiles" src={profile} alt="Profile" />
+            </div>{Username}
           </div>
-          <div>
-            <Invite websocket={websocket} />
+          <div className="invite-friend">
+            <Invite websocket={websocket} /><div className="requests-btn">{requests && <Requests Data={[requests, websocket]} />}</div>
           </div>
-          <div>{requests && <Requests Data={[requests, websocket]} />}</div>
-        </nav>
+          <div className="requests-btn">Logout</div>
+        </div>
       }
       mainContentChildren={
         <div className="Main">

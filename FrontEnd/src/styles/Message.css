@@ -4,7 +4,42 @@ body{
     padding: 0;
 }
 
-nav div{
-    margin-left: 1vw;
-    margin-right: 1vw;
+.message-nav-bar{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    margin-left: 1.6vw;
+    margin-right: 1.6vw;
+}
+
+.username-logout{
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.profiles{
+    width: 100%;
+    height: 100%;
+}
+
+.profile-pics{
+    width: 2.5vw;
+    height: 2.5vw;
+}
+
+.invite-friend{
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    margin-left: 3vw;
+}
+
+.requests-btn{
+    grid-column: 3;
+    justify-content: left;
+    display: grid;
+    grid-template-rows: auto 1fr;
 }
