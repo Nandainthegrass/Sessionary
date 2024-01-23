@@ -59,11 +59,8 @@ const WebSocketExample = () => {
           const prevlist = sessions;
           setSessions((prevlist) => [data["Session"], ...prevlist]);
         } else if (data["type"] == "load messages") {
-          console.log(data["Messages"]);
           setMessages(data["Messages"]);
-          console.log(data["Messages"]);
         } else if (data["type"] == "message") {
-          console.log(data["Message"]);
           let SessionID = localStorage.getItem("SessionID");
           if (data["SessionID"] == SessionID) {
             const prevmessages = messages;

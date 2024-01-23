@@ -298,3 +298,24 @@ FUNCTION TO LOAD USER SESSION DETAILS
 async def load_sessions(Manager, UserID):
     reply = Load_User_Session_Details(UserID=UserID)
     await Manager.Send_Message(UserID, json.dumps(reply))
+
+'''
+FUNCTION TO DELETE A SESSIONS FROM THE DB
+'''
+async def delete_session(Manager,UserID, SessionID):
+    check = await Sessions.find_one({"SessionID": SessionID})
+    if check is None:
+        reply = {
+            "type": "Error",
+            "Details": "Session doesn't exist or has been deleted already"
+        }
+    else:
+        await Messages.delete_many({"SessionID": SessionID})
+        await Sessions.delete_one({"SessionID": SessionID})
+        reply = {
+            "type": "Error",
+            "Details": "A Session has been deleted by you or your friend"
+        }
+        for user in check["Users"]:
+            await Manager.Send_Message(user, json.dumps(reply))
+        

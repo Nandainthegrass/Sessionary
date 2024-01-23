@@ -3,12 +3,11 @@ import '../styles/sessions.css';
 import profile from './Session_Images/Profile.png';
 
 const Sessions = ({ Data }) => {
-  const sessions = Data[0];
   const Socket = Data[1];
   const update_notif = Data[2];
 
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [sessions, setSessions] = useState(Data[0]);
   const GetMessages = (SessionID) => {
     localStorage.setItem('SessionID', SessionID);
     if (Socket) {
@@ -21,6 +20,20 @@ const Sessions = ({ Data }) => {
     session.Username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const deleteSession = (SessionID) => {
+      if (Socket) {
+        Socket.send(JSON.stringify({ type: 'delete', SessionID: SessionID }));
+      }
+      const session = localStorage.getItem("SessionID");
+      if (session === SessionID) {
+        localStorage.removeItem("SessionID");
+      }
+      // Use functional update to ensure you're working with the latest state
+      setSessions((prevSessions) =>
+        prevSessions.filter((session) => session.SessionID !== SessionID)
+      );
+    };
+    
   return (
     <div className="Search-and-Btn-Container grid-item">
       <div className="search">
@@ -43,6 +56,7 @@ const Sessions = ({ Data }) => {
             key={session.SessionID}
             className="Session-Button"
             onClick={() => GetMessages(session.SessionID)}
+            //onClick={()=>deleteSession(session.SessionID)}
           >
             <div className="profile-pic">
               <img className="profile" src={profile} alt="Profile" />
