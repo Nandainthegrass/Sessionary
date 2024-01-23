@@ -19,12 +19,18 @@ const Sessionary_Messages = ({ Data }) => {
   const update_sessions = Data[2];
 
   const Send_Message = (data) => {
-    if (data != "") {
+    if (data !== "") {
       if (Socket) {
+        // Insert a newline character every 55 characters or at word boundaries, avoiding splitting common combinations
+        const formattedData = data.replace(
+          /(.{1,75}(?:(?=\s)|$)(?![^ ]{1,4}(?=\s|$))|\S{76})/g,
+          "$1\n"
+        );
+
         Socket.send(
           JSON.stringify({
             type: "message",
-            data: data,
+            data: formattedData,
             SessionID: localStorage.getItem("SessionID"),
           })
         );

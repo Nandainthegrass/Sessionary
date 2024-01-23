@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Alert from "../../Layout/Alert";
 
 function Login() {
+  localStorage.clear();
   const navigate = useNavigate();
   const [alert, setAlert] = useState("");
   async function submitForm(event) {

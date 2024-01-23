@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/sessions.css';
 import profile from './Session_Images/Profile.png';
-import noti from './Session_Images/notification.png';
 
 const Sessions = ({ Data }) => {
   const sessions = Data[0];
@@ -53,7 +52,7 @@ const Sessions = ({ Data }) => {
               <div className="notif">
                 {session.Color === 'True' && (
                   <div className="notif">
-                    <img src={noti} className="noti-image" alt="Notification" />
+                    &#11044;
                   </div>
                 )}
               </div>

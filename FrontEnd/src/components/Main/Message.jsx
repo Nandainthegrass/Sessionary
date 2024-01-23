@@ -5,23 +5,29 @@ import "../../styles/Message.css";
 import Requests from "./components/requests";
 import Sessions from "./components/sessions";
 import Sessionary_Messages from "./components/Sessionary_Messages";
+import { useNavigate } from "react-router-dom";
 import "./styles/sessions.css";
 import Layout from "../../Layout/Layout";
 import Alert from "../../Layout/Alert";
 import profile from "./components/Session_Images/Profile.png";
 
 const WebSocketExample = () => {
+  const navigate = useNavigate();
+  if(localStorage.getItem("UserID")===null){
+    navigate('/');
+  }
+  useEffect(()=>{
+    localStorage.removeItem("SessionID");
+  },[])
   const [websocket, setWebsocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [messages, setMessages] = useState([]);
   const [alert, setAlert] = useState("");
-
   const jtoken = localStorage.getItem("token");
   const UserId = localStorage.getItem("UserID");
   const Username = localStorage.getItem("Username");
-
   useEffect(() => {
     try {
       const [, token] = jtoken.split("Bearer ");
@@ -76,7 +82,7 @@ const WebSocketExample = () => {
       };
 
       socket.onclose = () => {
-        console.log("WebSocket connection closed");
+        setAlert("Server Connection Lost, Try Refreshing");
       };
       socket.onerror = (event) => {
         setAlert("Web Socket Error!");
@@ -115,6 +121,11 @@ const WebSocketExample = () => {
   };
   if (loading) return <p>Loading...</p>;
 
+  const Logout = () =>{
+    localStorage.clear();
+    navigate("/");
+  }
+
   return (
     <Layout
       navChildren={
@@ -132,7 +143,7 @@ const WebSocketExample = () => {
             <div className="requests-btn">
               {requests && <Requests Data={[requests, websocket]} />}
             </div>
-            <button className="logout-btn">Logout</button>
+            <button className="logout-btn" onClick={() => Logout()}>Logout</button>
           </div>
         </div>
       }

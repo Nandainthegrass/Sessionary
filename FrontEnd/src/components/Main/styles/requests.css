@@ -24,6 +24,7 @@
     grid-row: 1;
     display: flex;
     height: 4vh;
+    width: max-content;
     color: rgb(6, 203, 6);
     border: none;
     background: none;

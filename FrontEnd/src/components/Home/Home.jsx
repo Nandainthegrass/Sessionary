@@ -5,6 +5,7 @@ import Layout from "../../Layout/Layout";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  localStorage.clear();
   const navigate = useNavigate();
   const handleSignUp = () => {
     navigate("/signup");

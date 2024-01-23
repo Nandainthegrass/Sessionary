@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Alert from "../../Layout/Alert";
 
 function Signup() {
+  localStorage.clear();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [alert, setAlert] = useState("");
