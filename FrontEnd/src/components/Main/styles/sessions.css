@@ -91,7 +91,7 @@
   color: gray;
   transition: color 0.3s ease-in-out;
   height: 6vh;
-  place-self: top;
+  place-self: center;
   width: 3vw;
 }
 #send-btn:hover {
@@ -172,6 +172,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: auto 1fr auto;
+  margin: 0;;
 }
 
 .message-sender {
@@ -179,6 +180,7 @@
   grid-column: 1;
   display: flex;
   align-items: start;
+  margin-top: 0;
 }
 
 .message-data {
@@ -187,6 +189,7 @@
   display: flex;
   align-items: start;
   margin-left: 2vw;
+  margin-top: 0;
 }
 
 .message-timestamp {
