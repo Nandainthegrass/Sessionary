@@ -1,9 +1,9 @@
-export const Sessionary_Backend_Url = "http://localhost:8000/";
-
 import React from "react";
 
-const Api = () => {
-  return <div>Winston did this!!</div>;
-};
+function Api(){
+  return(
+    <h1>Winston did This!</h1>
+  );
+}
 
 export default Api;

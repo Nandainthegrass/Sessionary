@@ -6,8 +6,6 @@ import Home from "./components/Home/Home";
 import Message from "./components/Main/Message";
 import Api from "./Api";
 
-const allowedEndpoints = ["/home", "/signup", "/login", "/message", "/api"];
-
 const NotFound = () => {
   const notFoundStyle = {
     color: "white",
