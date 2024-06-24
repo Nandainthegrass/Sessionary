@@ -9,7 +9,6 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "mongodb://localhost:27017",
     "http://192.168.29.40:5173",
 ]
 app.add_middleware(
@@ -20,6 +19,10 @@ app.add_middleware(
     allow_headers = ["*"],
     expose_headers = ["*"]
 )
+
+@app.get('/ping')
+def ping():
+    return {"message": "pong"}
 
 @app.post('/register_user/')
 async def register_user(user: User):
