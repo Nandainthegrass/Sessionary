@@ -1,6 +1,11 @@
 import motor.motor_asyncio
+from dotenv import dotenv_values
 
-MONGO_DETAILS = "mongodb://localhost:27017"
+config = dotenv_values(".env")
+
+database_url = config["DATABASE_URL"]
+
+MONGO_DETAILS = database_url
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 

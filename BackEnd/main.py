@@ -21,6 +21,10 @@ app.add_middleware(
     expose_headers = ["*"]
 )
 
+@app.get('/ping')
+def ping():
+    return {"message": "pong"}
+
 @app.post('/register_user/')
 async def register_user(user: User):
     check = await search_user_by_username(user.username)
