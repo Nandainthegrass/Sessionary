@@ -6,6 +6,7 @@ import "../Login/Login.css";
 import Layout from "../../Layout/Layout";
 import { Link } from "react-router-dom";
 import Alert from "../../Layout/Alert";
+import { BASE_URL } from "../../Api";
 
 function Signup() {
   localStorage.clear();
@@ -17,10 +18,9 @@ function Signup() {
     event.preventDefault(); //stops default behaviour
     let formData = new FormData(document.getElementById("myForm"));
     let details = JSON.stringify(Object.fromEntries(formData));
-    console.log(details);
 
     try {
-      const response = await fetch("http://localhost:8000/register_user/", {
+      const response = await fetch(`${BASE_URL}register_user/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -6,7 +6,7 @@ import src from "./icons/Close_Window_icon.ico";
 const Alert = ({ stats = "Nuh uh", details, onHandleClose }) => {
   return (
     <>
-      <div class="outer-div">
+      <div className="outer-div">
         <div className="inner-title">
           <span className="alert-title">{stats}</span>
           <button className="close-btn" onClick={onHandleClose}>

@@ -10,15 +10,16 @@ import "./styles/sessions.css";
 import Layout from "../../Layout/Layout";
 import Alert from "../../Layout/Alert";
 import profile from "./components/Session_Images/Profile.png";
+import { BASE_URL, web_socket_url } from "../../Api";
 
 const WebSocketExample = () => {
   const navigate = useNavigate();
-  if(localStorage.getItem("UserID")===null){
-    navigate('/');
+  if (localStorage.getItem("UserID") === null) {
+    navigate("/");
   }
-  useEffect(()=>{
+  useEffect(() => {
     localStorage.removeItem("SessionID");
-  },[])
+  }, []);
   const [websocket, setWebsocket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState([]);
@@ -33,7 +34,7 @@ const WebSocketExample = () => {
       const [, token] = jtoken.split("Bearer ");
 
       axios
-        .get(`http://localhost:8000/Load_Details/${UserId}?token=${token}`)
+        .get(`${BASE_URL}Load_Details/${UserId}?token=${token}`)
         .then((response) => {
           setLoading(false);
           const session_data = response.data.Sessions;
@@ -43,7 +44,7 @@ const WebSocketExample = () => {
           console.error("GET request failed:", error);
         });
       const socket = new WebSocket(
-        `ws://localhost:8000/connection/${UserId}?token=${token}`
+        `${web_socket_url}connection/${UserId}?token=${token}`
       );
       socket.onopen = () => {
         console.log("WebSocket connection opened");
@@ -65,7 +66,6 @@ const WebSocketExample = () => {
           if (data["SessionID"] == SessionID) {
             const prevmessages = messages;
             setMessages((prevmessages) => prevmessages.concat(data["Message"]));
-            console.log(messages);
           } else {
             setSessions((prevList) =>
               prevList.map((session) =>
@@ -118,10 +118,10 @@ const WebSocketExample = () => {
   };
   if (loading) return <p>Loading...</p>;
 
-  const Logout = () =>{
+  const Logout = () => {
     localStorage.clear();
     navigate("/");
-  }
+  };
 
   return (
     <Layout
@@ -140,7 +140,9 @@ const WebSocketExample = () => {
             <div className="requests-btn">
               {requests && <Requests Data={[requests, websocket]} />}
             </div>
-            <button className="logout-btn" onClick={() => Logout()}>Logout</button>
+            <button className="logout-btn" onClick={() => Logout()}>
+              Logout
+            </button>
           </div>
         </div>
       }

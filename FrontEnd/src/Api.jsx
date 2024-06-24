@@ -1,9 +1,4 @@
 import React from "react";
 
-function Api(){
-  return(
-    <h1>Winston did This!</h1>
-  );
-}
-
-export default Api;
+export const BASE_URL = "https://sessionary.onrender.com/";
+export const web_socket_url = "wss://sessionary.onrender.com/";

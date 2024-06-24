@@ -6,6 +6,7 @@ import Layout from "../../Layout/Layout";
 import "./Login.css";
 import { Link } from "react-router-dom";
 import Alert from "../../Layout/Alert";
+import { BASE_URL } from "../../Api";
 
 function Login() {
   localStorage.clear();
@@ -15,10 +16,9 @@ function Login() {
     event.preventDefault(); //stops default behaviour
     let formData = new FormData(document.getElementById("myForm"));
     let details = JSON.stringify(Object.fromEntries(formData));
-    console.log(details);
 
     try {
-      const response = await fetch("http://localhost:8000/Login/", {
+      const response = await fetch(`${BASE_URL}Login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,10 +30,8 @@ function Login() {
         const data = await response.json();
         let UserID = data.UserID;
         let Username = data.Username;
-        console.log(`UserId: ${UserID} and UserName: ${Username}`);
-
         let authorizationHeader = response.headers.get("Authorization");
-        console.log(`Authorization Header: ${authorizationHeader}`);
+
         localStorage.setItem("UserID", UserID);
         localStorage.setItem("Username", Username);
         localStorage.setItem("token", authorizationHeader);
