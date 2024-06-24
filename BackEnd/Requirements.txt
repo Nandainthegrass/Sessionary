@@ -1,5 +1,4 @@
 fastapi
-python-dotenv
 uvicorn
 motor
 uuid

@@ -1,9 +1,7 @@
 import motor.motor_asyncio
-from dotenv import dotenv_values
+import os
 
-config = dotenv_values(".env")
-
-database_url = config["DATABASE_URL"]
+database_url = os.getenv("DATABASE_URL")
 
 MONGO_DETAILS = database_url
 
