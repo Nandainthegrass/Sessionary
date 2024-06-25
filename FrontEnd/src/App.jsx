@@ -18,11 +18,11 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Navigate to="/Sessionary/home" />} />
-        <Route path="/Sessionary/home" element={<Home />} />
-        <Route path="/Sessionary/signup" element={<Signup />} />
-        <Route path="/Sessionary/login" element={<Login />} />
-        <Route path="/Sessionary/message" element={<Message />} />
+        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/message" element={<Message />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
