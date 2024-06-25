@@ -8,6 +8,21 @@
   animation: spin 2s linear infinite;
 }
 
+.loader-div{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background-color:#013459;
+  width: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10vh;
+  height: 45%;
+}
+
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
