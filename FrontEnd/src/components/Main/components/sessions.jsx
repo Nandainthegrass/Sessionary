@@ -10,7 +10,10 @@ const Sessions = ({ Data }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-  const [sessions, setSessions] = useState(Data[0]);
+  const [sessions, setSessions] = useState([]);
+  useEffect(() => {
+    setSessions(Data[0]);
+  }, [Data]);
   const GetMessages = (SessionID) => {
     localStorage.setItem("SessionID", SessionID);
     if (Socket) {
