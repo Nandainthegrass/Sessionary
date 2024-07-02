@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../Layout/Layout";
 import { BASE_URL } from "../../Api";
 import { useState } from "react";
-import Loader from "../../loader";
+import Loader from "../../Loader";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
