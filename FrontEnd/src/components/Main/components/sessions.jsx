@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/sessions.css";
 import profile from "./Session_Images/Profile.png";
 import ContextMenu from "./ContextMenu";
